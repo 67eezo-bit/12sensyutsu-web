@@ -1,4 +1,4 @@
-name: Deploy to Sakura
+name: Deploy to Sakura Server
 
 on:
   push:
@@ -6,18 +6,27 @@ on:
       - main
 
 jobs:
-  ftp-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Deploy via SFTP
+        uses: wlixcc/SFTP-Deploy-Action@v1.5.0
+
         with:
-          server: ${{ secrets.SAKURA_FTP_SERVER }}
-          username: ${{ secrets.SAKURA_FTP_USERNAME }}
-          password: ${{ secrets.SAKURA_FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /home/kei-on/www/12sensyutsu.com/
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          server: www677.sakura.ne.jp
+          port: 22
+          sftp_only: true
+
+          local_path: './*'
+          remote_path: '/home/kei-on/www/12sensyutsu.com/'
+
+          exclude: |
+            .git*
+            .github*
+            README.md
