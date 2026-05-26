@@ -21,7 +21,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: 22
-          protocol: sftp
+       
           local-dir: ./
           server-dir: /home/kei-on/www/12sensyutsu.com/
 
