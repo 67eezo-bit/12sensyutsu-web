@@ -13,9 +13,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install SSH Pass
-        run: sudo apt-get update && sudo apt-get install -y sshpass
-
-      - name: Deploy via SFTP (rsync)
-        run: |
-          sshpass -p "${{ secrets.SFTP_PASSWORD }}" rsync -avz -e "ssh -p 22 -o StrictHostKeyChecking=no" --exclude='.git*' --exclude='.github*' ./ ${{ secrets.SFTP_USERNAME }}@www677.sakura.ne.jp:/home/kei-on/www/12sensyutsu.com/
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: kei-on.sakura.ne.jp
+          username: kei-on
+          password: ${{ secrets.SFTP_PASSWORD }}
+          local-dir: ./
+          server-dir: ./www/12sensyutsu.com/
