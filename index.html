@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+<title>12占術｜12 SENSYUTSU</title>
+<style>
+:root{--shu:#b23a2e;--sumi:#1a1612;--washi:#fffaf0;--washi-warm:#f7f0e4;--gold:#c9a24a;--green:#7e9c5d;--blue:#4a8aa8;--purple:#5d4a6a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Serif JP','Hiragino Mincho ProN',serif;background:var(--washi);color:var(--sumi);line-height:1.7;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:0 1rem}
+button{cursor:pointer;border:none;font-family:inherit}
+input,select{font-family:inherit;font-size:1rem}
+hr.shu{border:none;height:1px;background:var(--shu);opacity:.25;margin:1.2rem 0}
+.badge{display:inline-block;padding:2px 8px;font-size:11px;letter-spacing:.15em;border-radius:2px}
+.badge-master{background:rgba(201,162,74,.22);color:#8a6a25}
+.badge-monthly{background:rgba(94,140,60,.18);color:#4d7a31}
+.badge-shu{background:var(--shu);color:var(--washi)}
+.card{background:var(--washi);border:1px solid rgba(26,22,18,.08);padding:1.5rem;position:relative}
+.card::before,.card::after{content:'';position:absolute;width:10px;height:10px;border-color:rgba(26,22,18,.2);border-style:solid}
+.card::before{top:6px;left:6px;border-width:1px 0 0 1px}
+.card::after{bottom:6px;right:6px;border-width:0 1px 1px 0}
+.btn-primary{background:var(--shu);color:var(--washi);padding:12px 24px;font-size:14px;letter-spacing:.3em;transition:transform .15s}
+.btn-primary:active{transform:scale(.97)}
+.btn-admin{background:#1d4ed8;color:#fff;padding:10px 18px;font-size:13px;letter-spacing:.2em;border-radius:4px;box-shadow:0 6px 18px rgba(29,78,216,.3)}
+.btn-outline{border:1px solid rgba(26,22,18,.2);background:transparent;color:var(--sumi);padding:8px 16px;font-size:12px;letter-spacing:.25em}
+.btn-secondary{background:rgba(201,162,74,.2);color:#8a6a25;border:1px solid rgba(201,162,74,.4);padding:10px 18px;font-size:12px;border-radius:4px;transition:all .2s}
+.btn-secondary:hover{background:rgba(201,162,74,.3)}
+.btn-toggle{border:1px solid rgba(26,22,18,.2);background:transparent;padding:8px 16px;font-size:12px;border-radius:4px;margin:4px;cursor:pointer;transition:all .2s}
+.btn-toggle.active{background:var(--shu);color:var(--washi);border-color:var(--shu)}
+.btn-radio{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid rgba(26,22,18,.2);background:transparent;border-radius:4px;margin:6px 0;cursor:pointer;transition:all .2s;width:100%}
+.btn-radio.active{background:var(--shu);color:var(--washi);border-color:var(--shu)}
+.btn-radio input{margin:0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px;border-bottom:2px solid rgba(178,58,46,.3);font-size:11px;letter-spacing:.2em;color:var(--shu)}
+td{padding:8px;border-bottom:1px solid rgba(26,22,18,.08)}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto}
+.modal{background:var(--washi);max-width:1000px;width:100%;padding:1.5rem;box-shadow:0 30px 80px rgba(0,0,0,.2)}
+.cycle-badge{display:inline-block;padding:3px 10px;border-radius:2px;font-size:12px;color:#fff;letter-spacing:.15em}
+.score-bar{width:100%;height:20px;background:rgba(26,22,18,.1);border-radius:3px;margin:4px 0;overflow:hidden}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--shu),var(--gold));transition:width .3s}
+.footer{border-top:1px solid rgba(26,22,18,.1);margin-top:3rem;padding:2rem 0;font-size:11px;color:rgba(26,22,18,.55);line-height:1.9}
+.plan-box{border:1px solid var(--shu);padding:1rem;margin:1rem 0;border-radius:6px;text-align:center;transition:all .2s}
+.plan-box:hover{background:var(--washi-warm);box-shadow:0 4px 12px rgba(178,58,46,.15)}
+.keyword-group{display:flex;flex-wrap:wrap;gap:8px;margin:1rem 0}
+.optional-label{font-size:10px;color:var(--gold);letter-spacing:.2em;display:inline-block;margin-left:4px}
+.period-group{display:flex;flex-direction:column;gap:8px;margin:1rem 0}
+@media(max-width:600px){.container{padding:0 .75rem}h1{font-size:1.6rem!important}.plan-box{padding:.8rem}.btn-toggle{font-size:11px;padding:6px 12px}.btn-radio{font-size:12px;padding:8px 12px}}
+</style>
+</head>
+<body>
+<!-- ===== 認証画面 ===== -->
+<div id="authScreen">
+<div style="position:absolute;right:1rem;top:1rem;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:10">
+<button class="btn-admin" onclick="openAdminModal()">🛡 管理者ログイン</button>
+</div>
+<div class="container" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1rem">
+<div style="max-width:460px;width:100%;text-align:center">
+<p style="font-size:13px;letter-spacing:.4em;color:var(--shu)">12 SENSYUTSU</p>
+<h1 style="font-size:2.2rem;letter-spacing:.15em;margin:.5rem 0">12占術</h1>
+<hr class="shu" style="width:80px;margin:1rem auto">
+<div class="card" style="margin-top:2rem;text-align:left">
+<div style="text-align:center;margin-bottom:1.5rem">
+<div style="display:inline-flex;width:56px;height:56px;align-items:center;justify-content:center;border:1px solid rgba(26,22,18,.2);background:var(--washi-warm);font-size:1.4rem">🔒</div>
+</div>
+<p style="text-align:center;font-size:15px;letter-spacing:.2em;margin-bottom:.5rem">認証コードを入力</p>
+<p style="text-align:center;font-size:12px;color:rgba(26,22,18,.6);margin-bottom:1.5rem">本サービスはライセンス制です。認証コードをご入力ください。</p>
+<label style="font-size:11px;letter-spacing:.3em;color:var(--shu);display:flex;align-items:center;gap:6px;margin-bottom:6px">🔑 ACCESS CODE</label>
+<input type="password" id="pwInput" placeholder="••••••••••••" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:10px 0;text-align:center;font-size:1.1rem;letter-spacing:.3em;outline:none" autocomplete="current-password">
+<p id="authError" style="color:var(--shu);font-size:13px;text-align:center;margin-top:8px" class="hidden"></p>
+<button class="btn-primary" style="width:100%;margin-top:1.5rem" onclick="doLogin()">扉 を ひ ら く</button>
+<div style="margin-top:1.5rem;border-top:1px solid rgba(26,22,18,.1);padding-top:1rem;text-align:center">
+<p style="font-size:11px;color:rgba(26,22,18,.55)">認証コードは月毎に自動更新されます。</p>
+<p style="font-size:11px;color:rgba(26,22,18,.55)">マスターコードをお持ちの方は、そちらでもご利用いただけます。</p>
+<div style="margin-top:12px;border-left:3px solid var(--shu);padding:8px 12px;text-align:left;background:var(--washi-warm);font-size:11px;color:rgba(26,22,18,.7)">
+<strong style="color:var(--shu)">パスワードの条件</strong>　4文字以上 64文字以内、半角英数字とハイフン（-）のみ使用可能。重複は不可。
+</div>
+</div>
+</div>
+<p style="margin-top:2rem;font-size:11px;letter-spacing:.3em;color:rgba(26,22,18,.35)">── PRIVATE SERVICE ──</p>
+</div>
+</div>
+</div>
+
+<!-- ===== メイン画面 ===== -->
+<div id="mainScreen" class="hidden">
+<header style="border-bottom:1px solid rgba(26,22,18,.1);padding:12px 0">
+<div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+<div style="font-size:13px;letter-spacing:.3em"><span style="color:var(--shu)">12 SENSYUTSU</span> <strong>12占術</strong></div>
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font-size:11px;color:rgba(26,22,18,.55)">利用回数：∞</span>
+<button class="btn-outline" onclick="doLogout()">ログアウト</button>
+</div>
+</div>
+</header>
+<div class="container" style="padding-top:2rem;padding-bottom:1rem">
+<p style="font-size:12px;letter-spacing:.3em;color:var(--shu)">BIRTH → DESTINY → CYCLE</p>
+<h1 style="font-size:1.8rem;letter-spacing:.1em;margin:.5rem 0">生年月日と名前が<br>あなたの<span style="color:var(--shu)">12占術</span>を解きます</h1>
+</div>
+<!-- 入力フォーム -->
+<div class="container">
+<div class="card">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">お名前</span>
+<input type="text" id="nameInput" placeholder="例：田中太郎" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">性別</span>
+<select id="genderInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none">
+<option value="">選択してください</option>
+<option value="male">男性</option>
+<option value="female">女性</option>
+<option value="other">その他</option>
+</select></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">生年月日</span>
+<input type="date" id="birthInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">占う期間<span class="optional-label">必須</span></span>
+<div class="period-group">
+<label class="btn-radio" onclick="setPeriod(this,'day')">
+<input type="radio" name="period" value="day">
+<span>🔘 1日（今日）</span>
+</label>
+<label class="btn-radio" onclick="setPeriod(this,'month')">
+<input type="radio" name="period" value="month">
+<span>🔘 1ヶ月</span>
+</label>
+<label class="btn-radio" onclick="setPeriod(this,'year')">
+<input type="radio" name="period" value="year">
+<span>🔘 今年</span>
+</label>
+</div>
+<input type="hidden" id="selectedPeriod" value="day">
+</label>
+
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">占う項目 - あなた自身<span class="optional-label">必須</span></span>
+<div class="keyword-group" style="margin-top:8px">
+<button type="button" class="btn-toggle" onclick="toggleYourKeyword(this,'love')">💕 恋愛</button>
+<button type="button" class="btn-toggle" onclick="toggleYourKeyword(this,'marriage')">💍 結婚</button>
+<button type="button" class="btn-toggle" onclick="toggleYourKeyword(this,'career')">💼 仕事</button>
+<button type="button" class="btn-toggle" onclick="toggleYourKeyword(this,'money')">💰 金銭</button>
+<button type="button" class="btn-toggle" onclick="toggleYourKeyword(this,'health')">🩺 健康</button>
+<button type="button" class="btn-toggle" onclick="toggleYourKeyword(this,'relationship')">🤝 人間関係</button>
+</div>
+<input type="hidden" id="selectedYourKeyword" value="">
+</label>
+
+<!-- 相手の情報 -->
+<hr class="shu" style="grid-column:1/-1">
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相手の名前<span class="optional-label">オプション</span></span>
+<input type="text" id="partnerNameInput" placeholder="例：鈴木花子（入力しなくてもOK）" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相手の性別</span>
+<select id="partnerGenderInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none">
+<option value="">選択してください</option>
+<option value="male">男性</option>
+<option value="female">女性</option>
+<option value="other">その他</option>
+</select></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相手の生年月日</span>
+<input type="date" id="partnerBirthInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">占う項目 - 相手との関係<span class="optional-label" id="partnerKeywordLabel" style="display:none">オプション</span></span>
+<div class="keyword-group" style="margin-top:8px">
+<button type="button" class="btn-toggle" onclick="togglePartnerKeyword(this,'love')">💕 恋愛</button>
+<button type="button" class="btn-toggle" onclick="togglePartnerKeyword(this,'marriage')">💍 結婚</button>
+<button type="button" class="btn-toggle" onclick="togglePartnerKeyword(this,'career')">💼 仕事</button>
+<button type="button" class="btn-toggle" onclick="togglePartnerKeyword(this,'money')">💰 金銭</button>
+<button type="button" class="btn-toggle" onclick="togglePartnerKeyword(this,'health')">🩺 健康</button>
+<button type="button" class="btn-toggle" onclick="togglePartnerKeyword(this,'relationship')">🤝 人間関係</button>
+</div>
+<input type="hidden" id="selectedPartnerKeyword" value="">
+</label>
+</div>
+<div style="margin-top:1.5rem;text-align:center">
+<button class="btn-primary" onclick="doDiagnose()">✦ 占う</button>
+</div>
+<p style="text-align:right;font-size:11px;color:rgba(26,22,18,.55);margin-top:8px">使用回数に上限はありません（∞）</p>
+</div>
+</div>
+<!-- 結果エリア -->
+<div id="resultArea" class="container hidden" style="margin-top:2rem"></div>
+<!-- フッター -->
+<div class="footer">
+<div class="container">
+<p><strong>12占術</strong> ・ Private Service</p>
+<p>※ 本診断は独自に体系化した運命周期理論に基づくエンタテインメントです。最終的な意思決定はご自身と専門家の助言に基づいてください。</p>
+<p>※ 本サービスは私的・非公開のライセンス制サービスです。検索エンジンへの登録および第三者への共有はご遠慮ください。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== 管理者モーダル ===== -->
+<div id="adminOverlay" class="overlay hidden" onclick="closeAdminModal()">
+<div class="modal" onclick="event.stopPropagation()">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+<span style="font-size:12px;letter-spacing:.3em;color:var(--shu)">ADMIN ACCESS</span>
+<button onclick="closeAdminModal()" style="background:none;font-size:1.2rem;color:var(--sumi)">✕</button>
+</div>
+<div id="adminGate">
+<div style="text-align:center;margin:2rem 0">
+<div style="font-size:2rem;margin-bottom:1rem">🔒</div>
+<p style="font-size:14px;letter-spacing:.2em;margin-bottom:.5rem">管理者パスワードを入力</p>
+<p style="font-size:11px;color:rgba(26,22,18,.6);margin-bottom:1.5rem">パスワードを入力すると、発行・編集・削除パネルが開きます。</p>
+<input type="password" id="adminPwInput" placeholder="••••" style="width:200px;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px;text-align:center;font-size:1.2rem;letter-spacing:.4em;outline:none">
+<br><button class="btn-primary" style="margin-top:1rem" onclick="doAdminAuth()">✦ 認証する</button>
+<p style="font-size:10px;color:rgba(26,22,18,.5);margin-top:1rem">※ 初期パスワードは「1234」です。</p>
+</div>
+</div>
+<div id="adminPanel" class="hidden"></div>
+</div>
+</div>
+
+<script>
+// ===== 定数・データ =====
+const CYCLE_ORDER=["静命","内観","再生","種火","発芽","上昇","開花","躍動","栄光","収穫","豊穣","継承"];
+const CYCLE_INFO={
+静命:{season:"天命",keyword:"原点",summary:"あなたの本質を映す静寂。派手な行動は控え、心と向き合う時間を大切に。失敗を怒る前に、まずはトラブルを解決する。"},
+内観:{season:"天命",keyword:"整理",summary:"次へ進むために、心の重みを手放す。合わない関係・古い習慣は静かに整理を。相手のことを考える。それが、結局いちばんうまくいく。"},
+再生:{season:"天命",keyword:"更新",summary:"新しい自分が目覚める瞬間。前のサイクルを丁寧に締め括り、信じて一歩を踏み出して。頭のいい人とは、失ってはいけないものを分かっている人。"},
+種火:{season:"始動",keyword:"始動",summary:"新しい挑戦に小さな火を灯す。今日の一歩が、未来の大きな実を決める。いつかやるはやらない。本当にやりたいことは、思ったその時にもう始めている。"},
+発芽:{season:"始動",keyword:"育成",summary:"蒔いた種が確実に育つ。焦らず、丁寧に。継続そのものがエンジンになります。努力とは、自分が決めるものではなく、他人が決めるものである。"},
+上昇:{season:"始動",keyword:"決定",summary:"迷っていた道を選び切る時。心が最も動く一本へ。勢いに乗って決断を。搾取する側になるか、搾取される側になるか。その立場は、他人ではなく自分で決めている。"},
+開花:{season:"飛翔",keyword:"発信",summary:"あなたの輝きが外へ開く時期。温めてきた想いを、素直に世へ出してください。相手のことを考える。それが、結局いちばんうまくいく。"},
+躍動:{season:"飛翔",keyword:"拡大",summary:"出会い・評価・チャンスが拡大する。舞台に立つほど、追い風は強くなります。チャンスは誰にでも必ず来る。それを掴むかどうかは、自分次第。"},
+栄光:{season:"飛翔",keyword:"頂点",summary:"12周期の最高峰。努力が華やかに花開く瞬間。素直に喜びを受け取って。時間があっても、お金がなければ楽しめない。やっぱり、両方あってこそ人生は本当に楽しくなる。"},
+収穫:{season:"黄金",keyword:"実利",summary:"成果が形になって返ってくる。堅実な蓄えと、周囲への感謝を忘れずに。頭のいい人とは、失ってはいけないものを分かっている人。"},
+豊穣:{season:"黄金",keyword:"完成",summary:"12の物語が豊かに満ちる。達成を分かち合い、次の循環へ。好きなことを仕事にすると、実はうまくいかないことが多い。本当に大切なのは、人生全体のバランス。"},
+継承:{season:"黄金",keyword:"伝承",summary:"得たものを次へ手渡す時。経験・知識・人脈を惜しみなく継承してください。怒ると、相手は嫌な気持ちになる。そして結局、自分も同じように嫌な気持ちになる。"}
+};
+
+const SCORE_BY_CYCLE={
+静命:{love:48,marriage:42,career:52,money:45,health:72,relationship:50},
+内観:{love:42,marriage:38,career:48,money:40,health:68,relationship:45},
+再生:{love:55,marriage:50,career:58,money:50,health:75,relationship:58},
+種火:{love:62,marriage:60,career:68,money:58,health:80,relationship:65},
+発芽:{love:70,marriage:70,career:75,money:68,health:82,relationship:72},
+上昇:{love:78,marriage:78,career:82,money:75,health:85,relationship:80},
+開花:{love:85,marriage:88,career:88,money:82,health:88,relationship:85},
+躍動:{love:92,marriage:95,career:95,money:90,health:90,relationship:92},
+栄光:{love:98,marriage:98,career:98,money:95,health:92,relationship:98},
+収穫:{love:88,marriage:85,career:90,money:92,health:85,relationship:88},
+豊穣:{love:82,marriage:80,career:85,money:88,health:80,relationship:82},
+継承:{love:75,marriage:75,career:80,money:85,health:78,relationship:78}
+};
+
+const COMPATIBILITY_MATRIX={
+静命:{静命:55,内観:65,再生:72,種火:78,発芽:82,上昇:75,開花:68,躍動:62,栄光:58,収穫:70,豊穣:75,継承:80},
+内観:{静命:65,内観:52,再生:68,種火:72,発芽:78,上昇:82,開花:75,躍動:70,栄光:65,収穫:72,豊穣:78,継承:75},
+再生:{静命:72,内観:68,再生:58,種火:65,発芽:72,上昇:78,開花:82,躍動:80,栄光:75,収穫:68,豊穣:65,継承:70},
+種火:{静命:78,内観:72,再生:65,種火:55,発芽:62,上昇:70,開花:75,躍動:82,栄光:85,収穫:80,豊穣:75,継承:68},
+発芽:{静命:82,内観:78,再生:72,種火:62,発芽:50,上昇:65,開花:70,躍動:75,栄光:80,収穫:85,豊穣:82,継承:75},
+上昇:{静命:75,内観:82,再生:78,種火:70,発芽:65,上昇:55,開花:62,躍動:68,栄光:72,収穫:75,豊穣:80,継承:85},
+開花:{静命:68,内観:75,再生:82,種火:75,発芽:70,上昇:62,開花:58,躍動:65,栄光:70,収穫:78,豊穣:85,継承:82},
+躍動:{静命:62,内観:70,再生:80,種火:82,発芽:75,上昇:68,開花:65,躍動:52,栄光:60,収穫:70,豊穣:75,継承:80},
+栄光:{静命:58,内観:65,再生:75,種火:85,発芽:80,上昇:72,開花:70,躍動:60,栄光:55,収穫:65,豊穣:70,継承:75},
+収穫:{静命:70,内観:72,再生:68,種火:80,発芽:85,上昇:75,開花:78,躍動:70,栄光:65,収穫:58,豊穣:65,継承:72},
+豊穣:{静命:75,内観:78,再生:65,種火:75,発芽:82,上昇:80,開花:85,躍動:75,栄光:70,収穫:65,豊穣:55,継承:68},
+継承:{静命:80,内観:75,再生:70,種火:68,発芽:75,上昇:85,開花:82,躍動:80,栄光:75,収穫:72,豊穣:68,継承:58}
+};
+
+const CYCLE_MESSAGES={"静命":{"day":{"love":"今日は自分の気持ちとゆっくり向き合う日。相手を追うより、自分磨きに時間をかけると良いでしょう。","marriage":"今日の婚活は焦りは禁物。相手との「深さ」を感じることが大切です。","career":"今日は大きな決断より、目の前の仕事に集中することが吉。小さな積み重ねが信頼を生みます。","money":"今日は無駄遣いを避け、必要な支出に絞ること。節制が運を呼びます。","health":"今日は無理をせず、体の声に耳を傾けましょう。休息も大切な時間です。","relationship":"今日は聞き役に徹することが吉。相手の話をゆっくり受け止めると絆が深まります。"},"month":{"love":"今月は相手を知る期間です。焦らず、自然な流れを信じることが関係を深めます。","marriage":"今月は自分の理想と現実をすり合わせる時。相手への理解が深まるでしょう。","career":"今月は基礎固めの時期。地道な努力が来月以降の成果に繋がります。","money":"今月は貯蓄に意識を向ける月。着実な積み重ねが財運を呼びます。","health":"今月は心身のリセットが必要です。瞑想やヨガで内面を整えると良いでしょう。","relationship":"今月は信頼を再構築する期間。相手との距離感を見直すチャンスです。"},"year":{"love":"今年は恋愛の「原点」に立ち返る年。自分が本当に求めるパートナー像が見える時期です。","marriage":"今年は関係の本質を問う年。結婚への覚悟が試されるでしょう。","career":"今年は自分の適性を見つめ直す年。天職への道が開け始めます。","money":"今年は金銭感覚を刷新する年。人生設計の見直しが金運を引き上げます。","health":"今年は体と心のバランスを整える年。根本的な改善で来年への基礎ができます。","relationship":"今年は人間関係の価値観が変わる年。大切な人が明確になるでしょう。"}},"内観":{"day":{"love":"今日は恋愛に関して整理が必要な日。相手への期待と現実のギャップを認識することが大切です。","marriage":"今日は結婚生活に何が必要か問い直す日。思い込みを手放すことから始まります。","career":"今日は仕事への執着を手放す日。新しい視点が職場での評価を変えるでしょう。","money":"今日は無駄な支出を見つめる日。心当たりを整理すれば金運が流れ始めます。","health":"今日は体の疲労信号に耳を傾ける日。無理の積み重ねを手放しましょう。","relationship":"今日は複雑な人間関係を整理する日。必要な人を見極めることが平和をもたらします。"},"month":{"love":"今月は恋愛の「執着」を手放す時期です。相手を信じることで自由が生まれます。","marriage":"今月は夫婦間の誤解を解く月。対話が関係を再生させるでしょう。","career":"今月はキャリアの方向性を見直す期間。不要な執着が消え、道が見えます。","money":"今月は浪費パターンを手放す月。習慣の改善が経済基盤を安定させます。","health":"今月はストレスの原因を特定する時期。手放すべきものが明確になるでしょう。","relationship":"今月は人間関係を整理整頓する月。ギブ&テイクのバランスが整います。"},"year":{"love":"今年は恋愛の執着から解放される年。相手を支配するのではなく、信頼することの大切さが分かります。","marriage":"今年は結婚生活の「型」を壊す年。自分たちの形を創造する自由が生まれます。","career":"今年はキャリアの既成概念を捨てる年。新しい可能性が視野に入るでしょう。","money":"今年は金銭への執着が減る年。その先に真の豊かさが見えてきます。","health":"今年は根本的な生活習慣を改善する年。心身のリセットで来年への基盤ができます。","relationship":"今年は人間関係を根本的に見つめ直す年。本当に必要な人が残るでしょう。"}},"再生":{"day":{"love":"今日は恋愛で新しい一歩を踏み出す日。前の失敗を活かし、より良い関係へ向かいます。","marriage":"今日は結婚生活を新しく始め直す日。お互いを知り直すチャンスが訪れます。","career":"今日は仕事で新しいプロジェクトが動き始める日。成長の時間がやってきました。","money":"今日は金銭面での新しい選択肢が現れる日。前向きな決断が幸運を呼びます。","health":"今日は健康面で新しい取り組みを始める日。小さな習慣が大きな変化をもたらします。","relationship":"今日は人間関係がリセットされる日。新しい出会いや関係の深まりが起きるでしょう。"},"month":{"love":"今月は恋愛が生まれ変わる時期です。過去から学び、より成熟した関係へ進みます。","marriage":"今月は夫婦関係が新しいステージに進む月。相互理解が深まるでしょう。","career":"今月はキャリアの新しいチャンスが訪れる月。挑戦する勇気が報われます。","money":"今月は金銭面で新しい流れが起きる月。投資や副業など新しい道が開けます。","health":"今月は体が生まれ変わり始める月。新しい健康習慣が定着するでしょう。","relationship":"今月は人間関係が良い形で再構築される月。信頼が深まります。"},"year":{"love":"今年は恋愛が完全に新しくなる年。前の自分から卒業し、成熟した恋へ向かいます。","marriage":"今年は結婚生活が新しい次元に上がる年。夫婦としての絆が強まるでしょう。","career":"今年はキャリアが新しい方向へ進む年。あなたの適性が花開き始めます。","money":"今年は経済面で新しい基盤ができる年。安定と成長が同時に訪れるでしょう。","health":"今年は心身が完全にリセットされる年。来年への最高の準備ができます。","relationship":"今年は人間関係が新しく生まれ変わる年。本当に大切な人だけが残ります。"}},"種火":{"day":{"love":"今日は恋愛で小さな行動を起こす日。勇気ある一言が関係を変えるでしょう。","marriage":"今日は結婚への気持ちを少し表現する日。言葉が絆を強めます。","career":"今日は仕事で新しいアイデアを提案する日。小さな工夫が認められるでしょう。","money":"今日は新しい収入源を探り始める日。小さな種が大きく育つ可能性があります。","health":"今日は新しい運動を始める日。継続がもたらす変化を信じましょう。","relationship":"今日は人間関係で小さな歩み寄りをする日。意外な良い結果が生まれます。"},"month":{"love":"今月は恋愛で具体的な行動を起こす月。想いを形にする準備が整っています。","marriage":"今月は結婚へ向けた小さな準備が始まる月。積み重ねが大きな成果に繋がります。","career":"今月は仕事で新しいプロジェクトの種が蒔かれる月。来月への準備が大切です。","money":"今月は投資や副業の第一歩を踏み出す月。慎重さと勇気のバランスが吉です。","health":"今月は健康改善の種が蒔かれる月。小さな習慣の積み重ねが来月の成果を決めます。","relationship":"今月は人間関係で新しい関わり方を始める月。信頼の基礎ができるでしょう。"},"year":{"love":"今年は恋愛で大きな決断へ向かう準備期間です。小さな行動の積み重ねが来年の展開を決めます。","marriage":"今年は結婚への具体的な準備が始まる年。焦らず、着実に進むことが大切です。","career":"今年は新しいキャリアの種が蒔かれる年。来年への成長の土台ができるでしょう。","money":"今年は経済基盤を整える年。小さな節約と投資が来年の豊かさを生みます。","health":"今年は健康の新しい習慣が定着し始める年。来年の活力へつながります。","relationship":"今年は人間関係の新しい形が生まれ始める年。信頼の種が育ち始めるでしょう。"}},"発芽":{"day":{"love":"今日は恋愛で相手との絆が一段と深まる日。小さな努力が大きな信頼に変わります。","marriage":"今日は夫婦間で新しい理解が芽生える日。対話の時間を大切にしましょう。","career":"今日は仕事で成長を実感できる日。継続の力を感じるでしょう。","money":"今日は着実な収入が増える日。コツコツの努力が実を結び始めます。","health":"今日は体の変化を感じられる日。継続の効果が目に見え始めるでしょう。","relationship":"今日は人間関係が着実に深まる日。信頼が育ち始めるのを感じます。"},"month":{"love":"今月は恋愛が確実に育つ月です。相手との繋がりが実感できるようになるでしょう。","marriage":"今月は結婚生活で新しい喜びが芽生える月。一緒にいることの大切さが深まります。","career":"今月は仕事での実績が出始める月。継続の力が形になるでしょう。","money":"今月は収入が安定し始める月。努力が金銭に変わり始めます。","health":"今月は健康面で着実な改善が見られる月。新しい習慣が定着するでしょう。","relationship":"今月は人間関係が育つ月。信頼の根が深く張り始めます。"},"year":{"love":"今年は恋愛が着実に成長する年。小さな積み重ねが深い絆を生みます。","marriage":"今年は結婚生活の基盤が固まる年。協力し、一緒に成長することの喜びを感じるでしょう。","career":"今年は仕事での実績が着実に積み上がる年。来年への自信が生まれます。","money":"今年は経済が着実に安定し始める年。節度ある行動が豊かさを呼びます。","health":"今年は健康が根本から改善される年。新しい習慣が定着し、体が変わるでしょう。","relationship":"今年は人間関係が深く育つ年。信頼が実感できるようになります。"}},"上昇":{"day":{"love":"今日は恋愛で大きな決断をする日。迷いなく相手に想いを伝える時です。","marriage":"今日は結婚への確かな意思が固まる日。行動に移す勇気が湧いてくるでしょう。","career":"今日は仕事で新しいポジションへの道が開く日。決断の時が来ました。","money":"今日は金銭面での大きな判断をする日。自信を持った選択が運を呼びます。","health":"今日は健康面での新しい取り組みを決める日。その決定が人生を変えるでしょう。","relationship":"今日は人間関係で大事な決定をする日。勇気ある選択が新しい未来を開きます。"},"month":{"love":"今月は恋愛が勢いづく月です。相手との関係が新しいステージへ進むでしょう。","marriage":"今月は結婚へ向けた動きが加速する月。準備が形に変わり始めます。","career":"今月は仕事で昇進や新しい役割のチャンスが訪れる月。チャレンジする時です。","money":"今月は金銭面で上昇気流が生まれる月。投資や新事業の決断が吉です。","health":"今月は健康が向上し始める月。新しいレベルへの到達を感じるでしょう。","relationship":"今月は人間関係が深まり、信頼が固い絆になる月です。"},"year":{"love":"今年は恋愛が勢いで進む年。大きな決断が来年への幸せを約束するでしょう。","marriage":"今年は結婚へ向けた動きが本格化する年。準備と決断が人生を変えます。","career":"今年は仕事で大きな上昇気流が生まれる年。実績が評価に変わるでしょう。","money":"今年は金銭面で明らかな上昇が見られる年。投資と貯蓄の成果が出始めます。","health":"今年は健康が大きく向上する年。新しいレベルの体と心を手に入れるでしょう。","relationship":"今年は人間関係が強固になる年。信頼が金銭的な豊かさよりも大切だと気づきます。"}},"開花":{"day":{"love":"今日は恋愛で自分の気持ちを素直に表現する日。その勇気が相手の心を開きます。","marriage":"今日は結婚を約束する日。二人の未来が花開くでしょう。","career":"今日は仕事で自分の才能が開花する日。周囲からの評価が一変します。","money":"今日は金銭面での成功が具体化する日。努力が報酬に変わるでしょう。","health":"今日は心身が最高の状態になる日。新しい自分が目覚めます。","relationship":"今日は人間関係で深い絆が生まれる日。本当の繋がりを感じるでしょう。"},"month":{"love":"今月は恋愛が華やかに花開く月です。相手との関係が最高潮を迎えるでしょう。","marriage":"今月は結婚式を挙げたり、二人の新しい生活が始まる月。幸せが溢れます。","career":"今月は仕事での才能が認められ、大きなチャンスが訪れる月です。","money":"今月は金銭的な成功が目に見える形で現れる月。豊かさを実感するでしょう。","health":"今月は心身が最高に輝く月。新しい自信が生まれます。","relationship":"今月は人間関係が最も美しい形で花開く月。真の繋がりが実感できるでしょう。"},"year":{"love":"今年は恋愛が完全に花開く年。最高の形で新しい人生がスタートするでしょう。","marriage":"今年は結婚が人生の中心となる年。二人で創る幸せが最高潮に達します。","career":"今年は仕事での才能が完全に開花する年。自分の使命が見えるでしょう。","money":"今年は金銭的な豊かさが現実になる年。努力が最大の報酬に変わります。","health":"今年は心身が最高に輝く年。新しい人生の喜びを全身で感じるでしょう。","relationship":"今年は人間関係が最美に花開く年。本当の愛と信頼を体験します。"}},"躍動":{"day":{"love":"今日は恋愛で出会いと広がりが起きる日。新しい可能性が次々と現れるでしょう。","marriage":"今日は結婚生活で新しい経験や出会いが増える日。人生がより豊かになります。","career":"今日は仕事で新しい機会が次々と訪れる日。チャンスを掴む準備をしましょう。","money":"今日は金銭面での出会いや機会が増える日。新しい道が広がるでしょう。","health":"今日は心身が躍動し、活力に満ちる日。新しいチャレンジへの意欲が湧きます。","relationship":"今日は人間関係が急速に広がる日。新しい出会いが人生を変えるでしょう。"},"month":{"love":"今月は恋愛が活気づき、新しい出会いや展開が次々と起きる月です。","marriage":"今月は結婚生活がより多彩になる月。夫婦で新しい経験を共にするでしょう。","career":"今月は仕事で新しいプロジェクトや機会が増える月。忙しくも充実した時間となります。","money":"今月は金銭面での機会が増える月。複数の収入源が現れ始めるでしょう。","health":"今月は心身の活力が最高に達する月。新しいスポーツや趣味に挑戦するのに最適です。","relationship":"今月は人間関係が躍動的になる月。新しい人間関係が次々と広がるでしょう。"},"year":{"love":"今年は恋愛が大きく躍動する年。新しい出会いや展開があなたの人生を変えるでしょう。","marriage":"今年は結婚生活がより多彩で活気にあふれる年。共に成長し、新しい世界を広げます。","career":"今年は仕事が躍動的になる年。新しいプロジェクトや役割で成長するでしょう。","money":"今年は金銭面での活動が増える年。複数の収入源が確立され、経済的な自由が近づきます。","health":"今年は心身が最高に躍動する年。新しいチャレンジで自分の可能性を広げるでしょう。","relationship":"今年は人間関係が大きく広がる年。新しい繋がりがあなたの世界を豊かにします。"}},"栄光":{"day":{"love":"今日は恋愛で最高の瞬間を迎える日。長年の想いが報われ、幸せが頂点に達するでしょう。","marriage":"今日は結婚生活が最も輝く日。二人の愛が最高潮に達します。","career":"今日は仕事での成功が最大に達する日。栄光をつかむ瞬間が来ました。","money":"今日は金銭的な成功が頂点を迎える日。長年の夢が現実になるでしょう。","health":"今日は心身が最も輝く日。自分の最高の状態を実感するでしょう。","relationship":"今日は人間関係が最高に輝く日。愛と感謝に包まれるでしょう。"},"month":{"love":"今月は恋愛が最高潮を迎える月です。最高の形で幸せを手に入れるでしょう。","marriage":"今月は結婚生活が最も輝く月。共に歩む人生の素晴らしさを感じるでしょう。","career":"今月は仕事での成功が最大に達する月。栄光と報酬が現実になります。","money":"今月は金銭的な豊かさが最高に達する月。夢が現実になるでしょう。","health":"今月は心身が最も輝く月。新しい自信と活力に満ちるでしょう。","relationship":"今月は人間関係が最高に輝く月。愛される喜びを感じるでしょう。"},"year":{"love":"今年は恋愛が最高潮に達する年。人生で最高の幸せを経験するでしょう。","marriage":"今年は結婚生活が最も輝く年。二人で創る人生が完璧に見えるでしょう。","career":"今年は仕事での成功が最大に達する年。栄光と名誉があなたのものになります。","money":"今年は金銭的な豊かさが最高に達する年。人生の安定と自由が実現するでしょう。","health":"今年は心身が最高に輝く年。最高の自分を実現することができます。","relationship":"今年は人間関係が最高に輝く年。愛と感謝に包まれた人生が始まるでしょう。"}},"収穫":{"day":{"love":"今日は恋愛で成果が形になる日。長年の努力が実を結び、感謝の気持ちが湧きます。","marriage":"今日は結婚生活での成果を感じる日。共に築いたものの大切さが分かるでしょう。","career":"今日は仕事での成果が報酬に変わる日。堅実な努力が認められるでしょう。","money":"今日は金銭的な成果を収穫する日。貯蓄と投資の成果が見える瞬間です。","health":"今日は健康面での成果を感じる日。継続の力が体に現れるでしょう。","relationship":"今日は人間関係での成果を収穫する日。信頼が形に変わります。"},"month":{"love":"今月は恋愛での成果を実感できる月です。努力が実り、深い満足感を感じるでしょう。","marriage":"今月は結婚生活での成果を感じる月。共に歩んできたことの価値が見えます。","career":"今月は仕事での成果が報酬に変わる月。堅実さが評価されるでしょう。","money":"今月は金銭的な成果を収穫する月。貯蓄と投資が実を結びます。","health":"今月は健康面での成果が見える月。継続が健康を生み出すでしょう。","relationship":"今月は人間関係での成果を感じる月。信頼が確実な絆に変わります。"},"year":{"love":"今年は恋愛での成果を大きく収穫する年。深い満足感と感謝の気持ちに包まれるでしょう。","marriage":"今年は結婚生活での成果を実感する年。共に築いたものの素晴らしさが分かります。","career":"今年は仕事での成果を大きく収穫する年。堅実さが最高の報酬に変わるでしょう。","money":"今年は金銭的な豊かさを収穫する年。投資と貯蓄の成果が花開きます。","health":"今年は健康面での大きな成果を感じる年。継続した努力が最高の健康を生むでしょう。","relationship":"今年は人間関係での成果を大きく収穫する年。深い信頼と愛を感じるでしょう。"}},"豊穣":{"day":{"love":"今日は恋愛が完全に満ちる日。喜びと幸せに包まれ、相手への感謝が深まるでしょう。","marriage":"今日は結婚生活が完全に満ちる日。二人の人生が最も豊かに見える瞬間です。","career":"今日は仕事が完全に満ちる日。成就感に浸り、次への目標が見えるでしょう。","money":"今日は金銭面が完全に満ちる日。豊かさを実感し、それを分かち合いたくなるでしょう。","health":"今日は心身が完全に満ちる日。充実と幸せに包まれるでしょう。","relationship":"今日は人間関係が完全に満ちる日。愛と感謝に包まれ、人生の豊かさを感じます。"},"month":{"love":"今月は恋愛が完全に満ちる月です。喜びと幸せが溢れ、相手への愛が深まるでしょう。","marriage":"今月は結婚生活が完全に満ちる月。二人の人生が最も充実し、豊かに見えるでしょう。","career":"今月は仕事が完全に満ちる月。成就感に浸り、来月への展望が広がります。","money":"今月は金銭面が完全に満ちる月。豊かさが実感でき、それを分かち合う喜びが生まれるでしょう。","health":"今月は心身が完全に満ちる月。充実と幸せに満たされるでしょう。","relationship":"今月は人間関係が完全に満ちる月。愛と感謝に包まれ、人生の豊かさを感じるでしょう。"},"year":{"love":"今年は恋愛が完全に満ちる年。喜びと幸せの中で、人生が最高に見えるでしょう。","marriage":"今年は結婚生活が完全に満ちる年。二人の人生が最も充実し、豊かになります。","career":"今年は仕事が完全に満ちる年。成就感に浸りながら、新しい展望も見えてくるでしょう。","money":"今年は金銭面が完全に満ちる年。豊かさを感じ、それを周囲と分かち合う喜びが生まれます。","health":"今年は心身が完全に満ちる年。充実と幸せが人生全体を包みます。","relationship":"今年は人間関係が完全に満ちる年。愛と感謝に包まれ、人生の豊かさを実感するでしょう。"}},"継承":{"day":{"love":"今日は恋愛で次の段階へと進む日。経験を活かし、より良い関係へ導くでしょう。","marriage":"今日は結婚生活から新しい役割へ移行する日。親としての人生が始まるかもしれません。","career":"今日は仕事の経験を後進へ伝える日。リーダーシップが発揮されるでしょう。","money":"今日は金銭の知恵を次世代へ伝える日。資産管理の方針が明確になります。","health":"今日は健康知識を他者へシェアする日。自分の経験が誰かを救うでしょう。","relationship":"今日は人間関係の経験を次へ伝える日。メンターとしての役割が見える瞬間です。"},"month":{"love":"今月は恋愛の経験を次の世代へ伝える月です。親としての立場が確立されるでしょう。","marriage":"今月は結婚生活の知恵を次へ伝える月。子どもやパートナーへのメンターになります。","career":"今月は仕事の技術や知識を後進へ伝える月。リーダーシップが花開くでしょう。","money":"今月は資産や金銭の知恵を次世代へ伝える月。相続や教育の計画が整います。","health":"今月は健康知識を家族や周囲へシェアする月。導き手としての役割が定着するでしょう。","relationship":"今月は人間関係の経験を次へ伝える月。メンターとしての価値が認識されます。"},"year":{"love":"今年は恋愛の経験を後の世代へ伝える年。親としての人生が充実するでしょう。","marriage":"今年は結婚生活の知恵を次へ伝える年。家族の大切さが最高に実感できます。","career":"今年は仕事の技術や知恵を後進へ伝える年。リーダーシップの最高の形が実現するでしょう。","money":"今年は資産の知恵を次世代へ伝える年。世代を超えた豊かさが実現します。","health":"今年は健康知識を世の中へシェアする年。導き手としてのライフワークが見えるでしょう。","relationship":"今年は人間関係の経験を大きく次へ伝える年。人生の大いなる目的が実現されます。"}}};
+
+
+
+const CYCLE_COLORS={静命:"#3a3530",内観:"#5a5048",再生:"#7c6e8a",種火:"#7e9c5d",発芽:"#5d8a48",上昇:"#3f6d3a",開花:"#c9a24a",躍動:"#d97757",栄光:"#b23a2e",収穫:"#a8704a",豊穣:"#b88840",継承:"#8a5a3a"};
+const SEASON_EMOJI={天命:"❄",始動:"🌸",飛翔:"☀",黄金:"🍁"};
+const ZODIAC=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+const LIFESTAR_ZERO={水星:"子",氷晶星:"丑",木星:"寅",蒼海星:"卯",月星:"辰",潮汐星:"巳",火星:"午",深淵星:"未",金星:"申",純珠星:"酉",土星:"戌",天空星:"亥"};
+const CORE_TO_LIFESTAR={アクア:["水星","氷晶星"],フォレスト:["木星","蒼海星"],ルナ:["月星","潮汐星"],フレイム:["火星","深淵星"],シャイン:["金星","純珠星"],アース:["土星","天空星"]};
+const LIFESTAR_INFO={水星:{core:"アクア",element:"知性の流れ",feature:"知性的でクールな観察者。冷静な判断力と情報処理に優れる天才肌。"},氷晶星:{core:"アクア",element:"静謐の氷",feature:"繊細で内省的。芯の強さと深い洞察力を秘める。"},木星:{core:"フォレスト",element:"大地の根",feature:"誠実で努力家。着実に成果を積み上げる王道タイプ。"},蒼海星:{core:"フォレスト",element:"深淵の海",feature:"夢と直感に生きるロマンチスト。芸術性と感受性が豊か。"},月星:{core:"ルナ",element:"慈愛の月",feature:"面倒見のよい母性的リーダー。人と人を繋ぐ才能。"},潮汐星:{core:"ルナ",element:"潮流の魚",feature:"優しく繊細な平和主義者。共感力が高く癒しの分野で輝く。"},火星:{core:"フレイム",element:"情熱の火",feature:"情熱と行動力の塊。リスクを取って人生を切り開く先駆者。"},深淵星:{core:"フレイム",element:"深奥の闇",feature:"ミステリアスで一点集中型。徹底的に究める研究者気質。"},金星:{core:"シャイン",element:"光輝の金",feature:"華やかで社交的。美意識と豊かな感性で人を惹きつける。"},純珠星:{core:"シャイン",element:"純真の珠",feature:"純粋で愛らしい子ども心の持ち主。素直さと愛嬌で慕われる。"},土星:{core:"アース",element:"重厚の土",feature:"堅実で責任感の強いリーダー。粘り強く長期戦に強い大器晩成型。"},天空星:{core:"アース",element:"革新の天",feature:"独自の世界観を持つ自由人。型にはまらない発想で新しい風を吹き込む。"}};
+
+const HARDCODED_PASSWORDS=["1234","forever-premium-2026"];
+const MONTHLY_PASSPHRASE="fortune";
+const PW_KEY="proto_passwords_v1";
+const LOG_KEY="proto_logs_v1";
+const AUTH_KEY="zc_auth_date_v1";
+const AUTH_KIND_KEY="zc_auth_kind_v1";
+
+function getMonthlyPassword(){const d=new Date();return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${MONTHLY_PASSPHRASE}`}
+
+function getPasswords(){try{const r=localStorage.getItem(PW_KEY);if(r)return JSON.parse(r)}catch{}const now=new Date().toISOString();const init=[{id:rid(),code:"1234",plan:"master",memo:"審査担当者用（ハードコーディング）",createdAt:now,updatedAt:now,active:true},{id:rid(),code:"MASTER-7HJK-PR99",plan:"master",memo:"オーナー直販・春風（Kei-chan）",createdAt:now,updatedAt:now,active:true},{id:rid(),code:"ABCD-1234-XYZ9",plan:"monthly",memo:"FC #02 経由・初期テスト用",createdAt:now,updatedAt:now,active:true}];localStorage.setItem(PW_KEY,JSON.stringify(init));return init}
+function savePasswords(list){localStorage.setItem(PW_KEY,JSON.stringify(list))}
+function getLogs(){try{const r=localStorage.getItem(LOG_KEY);if(r)return JSON.parse(r)}catch{}return[]}
+function saveLogs(logs){localStorage.setItem(LOG_KEY,JSON.stringify(logs.slice(0,200)))}
+function pushLog(entry){const logs=getLogs();logs.unshift(entry);saveLogs(logs)}
+function rid(){return'PW-'+Math.random().toString(36).slice(2,8).toUpperCase()}
+
+function verifyPassword(input){
+  const t=input.trim();if(!t)return null;
+  if(HARDCODED_PASSWORDS.includes(t))return"master";
+  if(t===getMonthlyPassword())return"monthly";
+  const list=getPasswords();
+  const hit=list.find(p=>p.active!==false&&p.code===t);
+  if(hit)return hit.plan||"monthly";
+  return null;
+}
+
+// ===== 占術コアロジック =====
+function jdn(y,m,d){const a=Math.floor((14-m)/12);const y2=y+4800-a;const m2=m+12*a-3;return d+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045}
+function coreFromRemainder(r){if(r>=1&&r<=10)return"アクア";if(r>=11&&r<=20)return"アース";if(r>=21&&r<=30)return"シャイン";if(r>=31&&r<=40)return"フレイム";if(r>=41&&r<=50)return"ルナ";return"フォレスト"}
+function calcLifeStar(y,m,d){const j=jdn(y,m,d);const rem=j%60;const core=coreFromRemainder(rem);const pair=CORE_TO_LIFESTAR[core];const isOdd=y%2!==0;const star=isOdd?pair[1]:pair[0];return{lifeStar:star,core,polarity:isOdd?"陰（奇数年生まれ）":"陽（偶数年生まれ）",element:LIFESTAR_INFO[star].element,feature:LIFESTAR_INFO[star].feature,zeroZodiac:LIFESTAR_ZERO[star]}}
+function zodiacIdx(z){return ZODIAC.indexOf(z)}
+function cycleFromOffset(o){return CYCLE_ORDER[((o%12)+12)%12]}
+function dayZodiacIdx(y,m,d){return((jdn(y,m,d)+1)%12+12)%12}
+function calcDayCycle(star,y,m,d){return cycleFromOffset(dayZodiacIdx(y,m,d)-zodiacIdx(LIFESTAR_ZERO[star]))}
+function calcMonthCycle(star,month){return cycleFromOffset(((month%12)+12)%12-zodiacIdx(LIFESTAR_ZERO[star]))}
+function calcYearCycle(star,year){return cycleFromOffset((((year-4)%12+12)%12)-zodiacIdx(LIFESTAR_ZERO[star]))}
+
+// ===== 四柱推命ベース相性計算 =====
+const JIKKAN=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+const JUNISHI_FULL=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+const JIKKAN_GOGYO={甲:"木",乙:"木",丙:"火",丁:"火",戊:"土",己:"土",庚:"金",辛:"金",壬:"水",癸:"水"};
+function jikkanInYo(kan){return JIKKAN.indexOf(kan)%2===0?"陽":"陰"}
+function yearKanCalc(year){return JIKKAN[((year-4)%10+10)%10]}
+function yearShiCalc(year){return JUNISHI_FULL[((year-4)%12+12)%12]}
+function monthShiCalc(month){return JUNISHI_FULL[((month+1)%12+12)%12]}
+function monthKanCalc(yearGan,month){const yi=JIKKAN.indexOf(yearGan);return JIKKAN[((yi%5)*2+month)%10]}
+function dayPillarCalc(year,month,day){const a=Math.floor((14-month)/12);const y=year+4800-a;const m=month+12*a-3;const jd2=day+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;const gz=((jd2+49)%60+60)%60;return{kan:JIKKAN[gz%10],shi:JUNISHI_FULL[gz%12]}}
+function getMeishiki(year,month,day){const yK=yearKanCalc(year);const yS=yearShiCalc(year);const mK=monthKanCalc(yK,month);const mS=monthShiCalc(month);const dp=dayPillarCalc(year,month,day);return{year:{kan:yK,shi:yS},month:{kan:mK,shi:mS},day:{kan:dp.kan,shi:dp.shi}}}
+const GOGYO_ORDER=["木","火","土","金","水"];
+function isSojo(g1,g2){return(GOGYO_ORDER.indexOf(g1)+1)%5===GOGYO_ORDER.indexOf(g2)}
+function isSokoku(g1,g2){return(GOGYO_ORDER.indexOf(g1)+2)%5===GOGYO_ORDER.indexOf(g2)}
+function isHiwa(g1,g2){return g1===g2}
+const ROKUGO_PAIRS=[["子","丑"],["寅","亥"],["卯","戌"],["辰","酉"],["巳","申"],["午","未"]];
+function isRokugo(s1,s2){return ROKUGO_PAIRS.some(p=>(p[0]===s1&&p[1]===s2)||(p[0]===s2&&p[1]===s1))}
+const SANGO_GROUPS=[["子","申","辰"],["丑","酉","巳"],["寅","午","戌"],["卯","未","亥"]];
+function isSangoHalf(s1,s2){return SANGO_GROUPS.some(g=>g.includes(s1)&&g.includes(s2))}
+const SOCHU_PAIRS=[["子","午"],["丑","未"],["寅","申"],["卯","酉"],["辰","戌"],["巳","亥"]];
+function isSochu(s1,s2){return SOCHU_PAIRS.some(p=>(p[0]===s1&&p[1]===s2)||(p[0]===s2&&p[1]===s1))}
+const SANKEI_PAIRS=[["寅","巳"],["巳","申"],["寅","申"],["丑","戌"],["戌","未"],["丑","未"],["子","卯"]];
+function isSankei(s1,s2){return SANKEI_PAIRS.some(p=>(p[0]===s1&&p[1]===s2)||(p[0]===s2&&p[1]===s1))}
+const KANGO_PAIRS=[["甲","己"],["乙","庚"],["丙","辛"],["丁","壬"],["戊","癸"]];
+
+function calcShichuCompat(y1,m1,d1,y2,m2,d2){
+  const me1=getMeishiki(y1,m1,d1);const me2=getMeishiki(y2,m2,d2);
+  let score=65;
+  const dg1=JIKKAN_GOGYO[me1.day.kan];const dg2=JIKKAN_GOGYO[me2.day.kan];
+  if(isHiwa(dg1,dg2)){score+=12;if(jikkanInYo(me1.day.kan)!==jikkanInYo(me2.day.kan))score+=8;}
+  else if(isSojo(dg1,dg2)||isSojo(dg2,dg1)){score+=15;if(isSojo(dg1,dg2))score+=3;}
+  else if(isSokoku(dg1,dg2)||isSokoku(dg2,dg1)){score-=15;if(isSokoku(dg1,dg2))score-=3;}
+  const ds1=me1.day.shi;const ds2=me2.day.shi;
+  if(isRokugo(ds1,ds2))score+=15;else if(isSangoHalf(ds1,ds2))score+=10;else if(isSochu(ds1,ds2))score-=15;else if(isSankei(ds1,ds2))score-=10;
+  const ys1=me1.year.shi;const ys2=me2.year.shi;
+  if(isRokugo(ys1,ys2))score+=8;else if(isSangoHalf(ys1,ys2))score+=5;else if(isSochu(ys1,ys2))score-=8;else if(isSankei(ys1,ys2))score-=5;
+  const ms1=me1.month.shi;const ms2=me2.month.shi;
+  if(isRokugo(ms1,ms2))score+=7;else if(isSangoHalf(ms1,ms2))score+=4;else if(isSochu(ms1,ms2))score-=7;else if(isSankei(ms1,ms2))score-=4;
+  const isKg=KANGO_PAIRS.some(p=>(p[0]===me1.day.kan&&p[1]===me2.day.kan)||(p[0]===me2.day.kan&&p[1]===me1.day.kan));
+  if(isKg)score+=10;
+  return Math.max(35,Math.min(98,score));
+}
+
+// 旧互換用（周期ベース相性 - 期間別相性で使用）
+function calcCompatibility(cycle1,cycle2){
+  return COMPATIBILITY_MATRIX[cycle1][cycle2];
+}
+
+// ===== UI制御 =====
+function doLogin(){
+  const pw=document.getElementById('pwInput').value;
+  const kind=verifyPassword(pw);
+  if(!kind){document.getElementById('authError').textContent='認証コードが正しくありません。';document.getElementById('authError').classList.remove('hidden');return}
+  document.getElementById('authError').classList.add('hidden');
+  localStorage.setItem(AUTH_KEY,new Date().toISOString().slice(0,10));
+  localStorage.setItem(AUTH_KIND_KEY,kind);
+  showMain();
+}
+function doLogout(){localStorage.removeItem(AUTH_KEY);localStorage.removeItem(AUTH_KIND_KEY);showAuth()}
+function showAuth(){document.getElementById('authScreen').classList.remove('hidden');document.getElementById('mainScreen').classList.add('hidden')}
+function showMain(){document.getElementById('authScreen').classList.add('hidden');document.getElementById('mainScreen').classList.remove('hidden')}
+function checkAuth(){if(localStorage.getItem(AUTH_KEY))showMain();else showAuth()}
+
+function openAdminModal(){document.getElementById('adminOverlay').classList.remove('hidden');document.getElementById('adminGate').classList.remove('hidden');document.getElementById('adminPanel').classList.add('hidden')}
+function closeAdminModal(){document.getElementById('adminOverlay').classList.add('hidden')}
+function doAdminAuth(){const pw=document.getElementById('adminPwInput').value;if(pw==='1234'){document.getElementById('adminGate').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden');renderAdminPanel()}else{alert('パスワードが違います')}}
+
+function renderAdminPanel(){
+  const list=getPasswords();const logs=getLogs();
+  let h=`<h3 style="letter-spacing:.2em;margin-bottom:1rem">Admin Console ─ 新井オーナー専用</h3>`;
+  h+=`<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:1.5rem">`;
+  h+=`<div class="card" style="border-top:3px solid var(--shu);padding:1rem"><small>Active</small><div style="font-size:1.8rem;font-weight:bold">${list.length}</div></div>`;
+  h+=`<div class="card" style="border-top:3px solid var(--gold);padding:1rem"><small>Master</small><div style="font-size:1.8rem;font-weight:bold">${list.filter(p=>p.plan==='master').length}</div></div>`;
+  h+=`<div class="card" style="border-top:3px solid var(--green);padding:1rem"><small>Logs</small><div style="font-size:1.8rem;font-weight:bold">${logs.length}</div></div>`;
+  h+=`</div>`;
+  h+=`<div style="border-left:3px solid var(--shu);padding:8px 12px;margin-bottom:1rem;background:var(--washi-warm);font-size:11px"><strong style="color:var(--shu)">パスワードの条件</strong>　4文字以上64文字以内、半角英数字とハイフンのみ。重複不可。</div>`;
+  h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.5rem"><input id="issueMemo" placeholder="顧客名/メモ" style="flex:1;min-width:120px;border:none;border-bottom:1px solid rgba(26,22,18,.3);padding:6px 0;background:transparent"><select id="issuePlan" style="border:none;border-bottom:1px solid rgba(26,22,18,.3);padding:6px;background:transparent"><option value="monthly">サブスク</option><option value="master">買い切り</option></select><button class="btn-primary" style="padding:8px 16px;font-size:12px" onclick="doIssue()">発行</button></div>`;
+  h+=`<table><thead><tr><th>パスワード</th><th>プラン</th><th>メモ</th><th>操作</th></tr></thead><tbody>`;
+  list.forEach((p,i)=>{h+=`<tr><td style="font-family:monospace;letter-spacing:.1em">${p.code}</td><td><span class="badge ${p.plan==='master'?'badge-master':'badge-monthly'}">${p.plan==='master'?'買い切り':'サブスク'}</span></td><td>${p.memo||''}</td><td><button class="btn-outline" style="padding:4px 8px;font-size:11px;margin-right:4px" onclick="doEdit(${i})">編集</button><button class="btn-outline" style="padding:4px 8px;font-size:11px;color:var(--shu);border-color:var(--shu)" onclick="doRevoke(${i})">削除</button></td></tr>`});
+  h+=`</tbody></table>`;
+  h+=`<h4 style="margin-top:2rem;letter-spacing:.2em;font-size:13px">操作ログ</h4><table style="margin-top:.5rem"><thead><tr><th>日時</th><th>操作</th><th>コード</th><th>メモ</th></tr></thead><tbody>`;
+  logs.slice(0,20).forEach(l=>{h+=`<tr><td style="font-size:11px">${new Date(l.ts).toLocaleString('ja-JP')}</td><td>${l.action}</td><td style="font-family:monospace">${l.code}</td><td>${l.memo||''}</td></tr>`});
+  h+=`</tbody></table>`;
+  document.getElementById('adminPanel').innerHTML=h;
+}
+function doIssue(){const memo=document.getElementById('issueMemo').value.trim();const plan=document.getElementById('issuePlan').value;if(!memo){alert('メモを入力してください');return}const code=plan==='master'?'MASTER-'+rndPart()+'-'+rndPart():rndPart()+'-'+rndPart()+'-'+rndPart();const list=getPasswords();const now=new Date().toISOString();list.unshift({id:rid(),code,plan,memo,createdAt:now,updatedAt:now,active:true});savePasswords(list);pushLog({ts:now,action:'発行',code,plan,memo});document.getElementById('issueMemo').value='';renderAdminPanel();alert('発行しました: '+code)}
+function doEdit(idx){const list=getPasswords();const p=list[idx];const newCode=prompt('新しいパスワードを入力:',p.code);if(!newCode||!newCode.trim())return;if(newCode.trim().length<4){alert('4文字以上必要です');return}if(!/^[A-Za-z0-9-]+$/.test(newCode.trim())){alert('半角英数字とハイフンのみ');return}const prev=p.code;p.code=newCode.trim();p.updatedAt=new Date().toISOString();savePasswords(list);pushLog({ts:p.updatedAt,action:'編集',code:newCode.trim(),prevCode:prev,plan:p.plan,memo:p.memo});renderAdminPanel()}
+function doRevoke(idx){const list=getPasswords();const p=list[idx];if(!confirm('削除しますか？\n'+p.code))return;list.splice(idx,1);savePasswords(list);pushLog({ts:new Date().toISOString(),action:'削除',code:p.code,plan:p.plan,memo:p.memo});renderAdminPanel()}
+function rndPart(){return Math.random().toString(36).slice(2,6).toUpperCase()}
+
+function setPeriod(btn,period){
+  document.querySelectorAll('.btn-radio').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  btn.querySelector('input').checked=true;
+  document.getElementById('selectedPeriod').value=period;
+}
+
+function toggleYourKeyword(btn,keyword){
+  document.querySelectorAll('[onclick*="toggleYourKeyword"]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('selectedYourKeyword').value=keyword;
+}
+
+function togglePartnerKeyword(btn,keyword){
+  document.querySelectorAll('[onclick*="togglePartnerKeyword"]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('selectedPartnerKeyword').value=keyword;
+}
+
+function doDiagnose(){
+  const name=document.getElementById('nameInput').value.trim();
+  const gender=document.getElementById('genderInput').value;
+  const birth=document.getElementById('birthInput').value;
+  const period=document.getElementById('selectedPeriod').value;
+  const yourKeyword=document.getElementById('selectedYourKeyword').value;
+  const partnerName=document.getElementById('partnerNameInput').value.trim();
+  const partnerGender=document.getElementById('partnerGenderInput').value;
+  const partnerBirth=document.getElementById('partnerBirthInput').value;
+  const partnerKeyword=document.getElementById('selectedPartnerKeyword').value;
+  
+  if(!birth){alert('生年月日を入力してください');return}
+  if(!period){alert('占う期間を選択してください');return}
+  if(!yourKeyword){alert('占う項目（あなた自身）を選択してください');return}
+  if(partnerBirth&&!partnerKeyword){alert('相手の情報がある場合、相手との関係について占う項目を選択してください');return}
+  
+  const[by,bm,bd]=birth.split('-').map(Number);
+  const td=new Date();
+  let ty=td.getFullYear(),tm=td.getMonth()+1,tday=td.getDate();
+  
+  const star=calcLifeStar(by,bm,bd);
+  let dayCyc,monthCyc,yearCyc;
+  let dayInfo,monthInfo,yearInfo;
+  let dayScore,displayPeriod;
+  
+  if(period==='day'){
+    dayCyc=calcDayCycle(star.lifeStar,ty,tm,tday);
+    dayInfo=CYCLE_INFO[dayCyc];
+    dayScore=SCORE_BY_CYCLE[dayCyc];
+    displayPeriod=`${ty}年${tm}月${tday}日`;
+  }else if(period==='month'){
+    monthCyc=calcMonthCycle(star.lifeStar,tm);
+    dayInfo=CYCLE_INFO[monthCyc];
+    dayScore=SCORE_BY_CYCLE[monthCyc];
+    dayCyc=monthCyc;
+    displayPeriod=`${ty}年${tm}月`;
+  }else if(period==='year'){
+    yearCyc=calcYearCycle(star.lifeStar,ty);
+    dayInfo=CYCLE_INFO[yearCyc];
+    dayScore=SCORE_BY_CYCLE[yearCyc];
+    dayCyc=yearCyc;
+    displayPeriod=`${ty}年`;
+  }
+  
+  let partnerInfo=null;
+  let compatScore=null;
+  let baseCompatScore=null;
+  if(partnerBirth){
+    const[pby,pbm,pbd]=partnerBirth.split('-').map(Number);
+    const pstar=calcLifeStar(pby,pbm,pbd);
+    let pDayCyc;
+    if(period==='day')pDayCyc=calcDayCycle(pstar.lifeStar,ty,tm,tday);
+    else if(period==='month')pDayCyc=calcMonthCycle(pstar.lifeStar,tm);
+    else pDayCyc=calcYearCycle(pstar.lifeStar,ty);
+    const genderMap={male:'男性',female:'女性',other:'その他'};const displayName=partnerName||`お相手（${genderMap[partnerGender]||'不明'}）`;
+    // 基本相性：四柱推命ベース（日干・地支の関係）
+    baseCompatScore=calcShichuCompat(by,bm,bd,pby,pbm,pbd);
+    partnerInfo={name:displayName,lifeStar:pstar.lifeStar,cycle:pDayCyc};
+    compatScore=calcCompatibility(dayCyc,pDayCyc);
+  }
+  
+  const keywordLabel={love:'💕 恋愛運',marriage:'💍 結婚運',career:'💼 仕事運',money:'💰 金銭運',health:'🩺 健康運',relationship:'🤝 人間関係運'};
+  const partnerKeywordLabel={love:'💕 恋愛相性',marriage:'💍 結婚相性',career:'💼 仕事相性',money:'💰 金銭相性',health:'🩺 健康相性',relationship:'🤝 人間関係相性'};
+  
+  let html=`<div class="card" style="border-top:3px solid ${CYCLE_COLORS[dayCyc]};margin-bottom:1.5rem">`;
+  html+=`<p style="font-size:11px;letter-spacing:.3em;color:var(--shu)">YOUR LIFE STAR</p>`;
+  html+=`<h2 style="font-size:1.8rem;letter-spacing:.1em;margin:.5rem 0">${star.lifeStar}・マスター</h2>`;
+  html+=`<p style="font-size:12px;color:rgba(26,22,18,.7)">コアタイプ：${star.core}　｜　${star.polarity}　｜　象意：${star.element}</p>`;
+  html+=`<p style="margin-top:.5rem;font-size:13px">${star.feature}</p>`;
+  html+=`</div>`;
+
+  html+=`<div class="card" style="margin-bottom:1.5rem">`;
+  html+=`<p style="font-size:11px;letter-spacing:.3em;color:var(--shu)">${period==='day'?'TODAY':period==='month'?'MONTHLY':'YEARLY'} ─ ${displayPeriod}</p>`;
+  html+=`<h3 style="font-size:1.5rem;margin:.5rem 0"><span class="cycle-badge" style="background:${CYCLE_COLORS[dayCyc]}">${dayCyc}</span> <small>${SEASON_EMOJI[dayInfo.season]} ${dayInfo.season}・${dayInfo.keyword}</small></h3>`;
+  const cycleMsg=(CYCLE_MESSAGES[dayCyc]&&CYCLE_MESSAGES[dayCyc][period]&&CYCLE_MESSAGES[dayCyc][period][yourKeyword])||dayInfo.summary;
+  html+=`<p style="font-size:14px;margin:.5rem 0">${cycleMsg}</p>`;
+  
+  // messages.jsonからコメントを取得して表示
+  if(messagesData[dayCyc]&&messagesData[dayCyc][period]&&messagesData[dayCyc][period][yourKeyword]){
+    const msgObj=messagesData[dayCyc][period][yourKeyword];
+    if(msgObj.current){
+      html+=`<div style="margin-top:1.2rem;padding:1rem;background:rgba(201,162,74,.08);border-left:3px solid var(--gold);border-radius:4px">`;
+      html+=`<p style="font-size:11px;color:var(--gold);font-weight:bold;margin-bottom:.5rem">詳細解説</p>`;
+      html+=`<p style="font-size:13px;line-height:1.8;color:rgba(26,22,18,.8)">${msgObj.current}</p>`;
+      html+=`</div>`;
+    }
+  }
+  
+  html+=`<div style="margin-top:1.5rem;padding-top:1rem;border-top:1px solid rgba(26,22,18,.1)">`;
+  html+=`<p style="font-size:12px;font-weight:bold;margin-bottom:1rem">【${keywordLabel[yourKeyword]}】</p>`;
+  html+=renderScoreBar(keywordLabel[yourKeyword],dayScore[yourKeyword]);
+  html+=`</div>`;
+  
+  if(partnerInfo){
+    const periodLabel=period==='day'?'今日':period==='month'?'今月':'今年';
+    html+=`<div style="margin-top:1rem;padding:1rem;background:var(--washi-warm);border-radius:6px;border-left:3px solid var(--gold)">`;
+    html+=`<p style="font-size:12px;font-weight:bold;margin-bottom:1rem">【${partnerKeywordLabel[partnerKeyword]}】</p>`;
+    html+=`<div style="text-align:center;font-size:1.4rem;color:var(--shu);font-weight:bold;margin:1rem 0">${partnerInfo.name}さんとの相性</div>`;
+    html+=`<div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin:1rem 0">`;
+    html+=`<div style="text-align:center;padding:1rem;border:1px solid rgba(201,162,74,.4);border-radius:8px;min-width:140px"><p style="font-size:11px;letter-spacing:.2em;color:rgba(26,22,18,.6);margin-bottom:.5rem">基本相性</p><div style="font-size:2rem;color:var(--shu);font-weight:bold">${baseCompatScore}点</div><p style="font-size:10px;color:rgba(26,22,18,.5);margin-top:.3rem">生まれ持った二人の相性</p></div>`;
+    html+=`<div style="text-align:center;padding:1rem;border:1px solid rgba(201,162,74,.4);border-radius:8px;min-width:140px"><p style="font-size:11px;letter-spacing:.2em;color:rgba(26,22,18,.6);margin-bottom:.5rem">${periodLabel}の相性</p><div style="font-size:2rem;color:var(--shu);font-weight:bold">${compatScore}点</div><p style="font-size:10px;color:rgba(26,22,18,.5);margin-top:.3rem">${periodLabel}の運勢に基づく相性</p></div>`;
+    html+=`</div>`;
+    html+=`<p style="font-size:11px;color:rgba(26,22,18,.7);margin-top:1rem;text-align:center">あなたの周期「${dayCyc}」と${partnerInfo.name}の周期「${partnerInfo.cycle}」に基づいて計算されました。</p>`;
+    html+=`</div>`;
+  }
+  
+  html+=`</div>`;
+
+  html+=`<div class="card" style="margin-bottom:1.5rem;text-align:center">`;
+  html+=`<p style="font-size:12px;font-weight:bold;margin-bottom:1rem">【結果をシェア】</p>`;
+  const shareText=`私の12占術の${displayPeriod}の${keywordLabel[yourKeyword]}\n${name||'あなた'}の周期：${dayCyc}（${dayScore[yourKeyword]}点）\n詳しく見る→ https://12sensyutsu.com`;
+  html+=`<button class="btn-secondary" onclick="shareOnTwitter('${encodeURIComponent(shareText)}')">𝕏 Twitterでシェア</button>`;
+  html+=`<button class="btn-secondary" onclick="shareOnLine('${encodeURIComponent(shareText)}')">LINE でシェア</button>`;
+  html+=`<button class="btn-secondary" onclick="copyToClipboard('${shareText.replace(/\n/g,'%0A')}')">📋 URLをコピー</button>`;
+  html+=`</div>`;
+  
+  html+=`<div style="background:linear-gradient(135deg,rgba(178,58,46,.05),rgba(201,162,74,.05));padding:2rem;border-radius:8px;margin-bottom:1.5rem">`;
+  html+=`<p style="text-align:center;font-size:14px;font-weight:bold;color:var(--shu);margin-bottom:1.5rem">さらに詳しい占いをご希望の方へ</p>`;
+  html+=`<div class="plan-box">`;
+  html+=`<p style="font-size:13px;color:var(--shu);margin-bottom:.5rem"><strong>竹プラン</strong></p>`;
+  html+=`<p style="font-size:24px;font-weight:bold;margin:.5rem 0">月額 300円</p>`;
+  html+=`<p style="font-size:12px;color:rgba(26,22,18,.7);margin:1rem 0">毎月の詳細運勢、週間予測、パーソナルアドバイスなど</p>`;
+  html+=`<button class="btn-primary" style="margin-top:1rem;width:100%;padding:10px" onclick="redirectToPayment('竹')">詳しく見る</button>`;
+  html+=`</div>`;
+  html+=`<div class="plan-box">`;
+  html+=`<p style="font-size:13px;color:var(--shu);margin-bottom:.5rem"><strong>松プラン</strong></p>`;
+  html+=`<p style="font-size:24px;font-weight:bold;margin:.5rem 0">一生涯 5,000円</p>`;
+  html+=`<p style="font-size:12px;color:rgba(26,22,18,.7);margin:1rem 0">詳細占い・相性診断・深掘りアドバイス永遠使用可能</p>`;
+  html+=`<button class="btn-primary" style="margin-top:1rem;width:100%;padding:10px" onclick="redirectToPayment('松')">詳しく見る</button>`;
+  html+=`</div>`;
+  html+=`<div class="plan-box">`;
+  html+=`<p style="font-size:13px;color:var(--shu);margin-bottom:.5rem"><strong>フランチャイズ募集</strong></p>`;
+  html+=`<p style="font-size:24px;font-weight:bold;margin:.5rem 0">販売権 100,000円</p>`;
+  html+=`<p style="font-size:12px;color:rgba(26,22,18,.7);margin:1rem 0">このシステムを自分のビジネスとして独立開業できます</p>`;
+  html+=`<button class="btn-primary" style="margin-top:1rem;width:100%;padding:10px" onclick="redirectToPayment('フランチャイズ')">詳しく見る</button>`;
+  html+=`</div>`;
+  html+=`</div>`;
+
+  document.getElementById('resultArea').innerHTML=html;
+  document.getElementById('resultArea').classList.remove('hidden');
+  document.getElementById('resultArea').scrollIntoView({behavior:'smooth'});
+}
+
+function renderScoreBar(label,score){
+  return `<div style="margin-bottom:1rem">
+    <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+      <span style="font-size:12px">${label}</span>
+      <span style="font-size:12px;font-weight:bold">${score}点</span>
+    </div>
+    <div class="score-bar">
+      <div class="score-fill" style="width:${score}%;background:${score>70?'#7e9c5d':(score>50?'#c9a24a':'#b23a2e')}"></div>
+    </div>
+  </div>`;
+}
+
+function shareOnTwitter(text){window.open(`https://twitter.com/intent/tweet?text=${text}`,`_blank`)}
+function shareOnLine(text){window.open(`https://line.me/R/msg/text/${text}`,`_blank`)}
+function copyToClipboard(text){navigator.clipboard.writeText(decodeURIComponent(text.replace(/%0A/g,'\n'))).then(()=>alert('URLをコピーしました'))}
+function redirectToPayment(plan){alert(`${plan}プランのご購入ページに移動します。\n（実装予定：決済ページへのリンク）`)}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+  document.getElementById('adminPwInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAdminAuth()});
+  checkAuth();
+});
+</script>
+</body>
+</html>
