@@ -568,6 +568,18 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('adminPwInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAdminAuth()});
   checkAuth();
 });
+const seasonsDataUrl = './data/12sensyutsu_seasons.json';
+const messagesDataUrl = './data/12sensyutsu_messages.json';
+
+async function loadFortuneData() {
+  const seasons = await fetch(seasonsDataUrl).then(r => r.json());
+  const messages = await fetch(messagesDataUrl).then(r => r.json());
+
+  console.log(seasons);
+  console.log(messages);
+}
+
+loadFortuneData();  
 </script>
 </body>
 </html>
