@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+<title>12占術｜12 SENSYUTSU</title>
+<style>
+:root{--shu:#b23a2e;--sumi:#1a1612;--washi:#fffaf0;--washi-warm:#f7f0e4;--gold:#c9a24a;--green:#7e9c5d;--blue:#4a8aa8;--purple:#5d4a6a}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Serif JP','Hiragino Mincho ProN',serif;background:var(--washi);color:var(--sumi);line-height:1.7;min-height:100vh}
+.container{max-width:900px;margin:0 auto;padding:0 1rem}
+button{cursor:pointer;border:none;font-family:inherit}
+input,select{font-family:inherit;font-size:1rem}
+hr.shu{border:none;height:1px;background:var(--shu);opacity:.25;margin:1.2rem 0}
+.badge{display:inline-block;padding:2px 8px;font-size:11px;letter-spacing:.15em;border-radius:2px}
+.badge-master{background:rgba(201,162,74,.22);color:#8a6a25}
+.badge-monthly{background:rgba(94,140,60,.18);color:#4d7a31}
+.badge-shu{background:var(--shu);color:var(--washi)}
+.card{background:var(--washi);border:1px solid rgba(26,22,18,.08);padding:1.5rem;position:relative}
+.card::before,.card::after{content:'';position:absolute;width:10px;height:10px;border-color:rgba(26,22,18,.2);border-style:solid}
+.card::before{top:6px;left:6px;border-width:1px 0 0 1px}
+.card::after{bottom:6px;right:6px;border-width:0 1px 1px 0}
+.btn-primary{background:var(--shu);color:var(--washi);padding:12px 24px;font-size:14px;letter-spacing:.3em;transition:transform .15s}
+.btn-primary:active{transform:scale(.97)}
+.btn-admin{background:#1d4ed8;color:#fff;padding:10px 18px;font-size:13px;letter-spacing:.2em;border-radius:4px;box-shadow:0 6px 18px rgba(29,78,216,.3)}
+.btn-outline{border:1px solid rgba(26,22,18,.2);background:transparent;color:var(--sumi);padding:8px 16px;font-size:12px;letter-spacing:.25em}
+.btn-secondary{background:rgba(201,162,74,.2);color:#8a6a25;border:1px solid rgba(201,162,74,.4);padding:10px 18px;font-size:12px;border-radius:4px;transition:all .2s}
+.btn-secondary:hover{background:rgba(201,162,74,.3)}
+.btn-toggle{border:1px solid rgba(26,22,18,.2);background:transparent;padding:8px 16px;font-size:12px;border-radius:4px;margin:4px;cursor:pointer;transition:all .2s}
+.btn-toggle.active{background:var(--shu);color:var(--washi);border-color:var(--shu)}
+.btn-radio{display:flex;align-items:center;gap:8px;padding:10px 16px;border:1px solid rgba(26,22,18,.2);background:transparent;border-radius:4px;margin:6px 0;cursor:pointer;transition:all .2s;width:100%}
+.btn-radio.active{background:var(--shu);color:var(--washi);border-color:var(--shu)}
+.btn-radio input{margin:0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px;border-bottom:2px solid rgba(178,58,46,.3);font-size:11px;letter-spacing:.2em;color:var(--shu)}
+td{padding:8px;border-bottom:1px solid rgba(26,22,18,.08)}
+.hidden{display:none!important}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-start;justify-content:center;padding:2rem;overflow-y:auto}
+.modal{background:var(--washi);max-width:1000px;width:100%;padding:1.5rem;box-shadow:0 30px 80px rgba(0,0,0,.2)}
+.cycle-badge{display:inline-block;padding:3px 10px;border-radius:2px;font-size:12px;color:#fff;letter-spacing:.15em}
+.score-bar{width:100%;height:20px;background:rgba(26,22,18,.1);border-radius:3px;margin:4px 0;overflow:hidden}
+.score-fill{height:100%;background:linear-gradient(90deg,var(--shu),var(--gold));transition:width .3s}
+.footer{border-top:1px solid rgba(26,22,18,.1);margin-top:3rem;padding:2rem 0;font-size:11px;color:rgba(26,22,18,.55);line-height:1.9}
+.plan-box{border:1px solid var(--shu);padding:1rem;margin:1rem 0;border-radius:6px;text-align:center;transition:all .2s}
+.plan-box:hover{background:var(--washi-warm);box-shadow:0 4px 12px rgba(178,58,46,.15)}
+.keyword-group{display:flex;flex-wrap:wrap;gap:8px;margin:1rem 0}
+.optional-label{font-size:10px;color:var(--gold);letter-spacing:.2em;display:inline-block;margin-left:4px}
+.period-group{display:flex;flex-direction:column;gap:8px;margin:1rem 0}
+@media(max-width:600px){.container{padding:0 .75rem}h1{font-size:1.6rem!important}.plan-box{padding:.8rem}.btn-toggle{font-size:11px;padding:6px 12px}.btn-radio{font-size:12px;padding:8px 12px}}
+</style>
+</head>
+<body>
+<!-- ===== 認証画面 ===== -->
+<div id="authScreen">
+<div style="position:absolute;right:1rem;top:1rem;display:flex;flex-direction:column;align-items:flex-end;gap:8px;z-index:10">
+<button class="btn-admin" onclick="openAdminModal()">🛡 管理者ログイン</button>
+</div>
+<div class="container" style="display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem 1rem">
+<div style="max-width:460px;width:100%;text-align:center">
+<p style="font-size:13px;letter-spacing:.4em;color:var(--shu)">12 SENSYUTSU</p>
+<h1 style="font-size:2.2rem;letter-spacing:.15em;margin:.5rem 0">12占術</h1>
+<hr class="shu" style="width:80px;margin:1rem auto">
+<div class="card" style="margin-top:2rem;text-align:left">
+<div style="text-align:center;margin-bottom:1.5rem">
+<div style="display:inline-flex;width:56px;height:56px;align-items:center;justify-content:center;border:1px solid rgba(26,22,18,.2);background:var(--washi-warm);font-size:1.4rem">🔒</div>
+</div>
+<p style="text-align:center;font-size:15px;letter-spacing:.2em;margin-bottom:.5rem">認証コードを入力</p>
+<p style="text-align:center;font-size:12px;color:rgba(26,22,18,.6);margin-bottom:1.5rem">本サービスはライセンス制です。認証コードをご入力ください。</p>
+<label style="font-size:11px;letter-spacing:.3em;color:var(--shu);display:flex;align-items:center;gap:6px;margin-bottom:6px">🔑 ACCESS CODE</label>
+<input type="password" id="pwInput" placeholder="••••••••••••" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:10px 0;text-align:center;font-size:1.1rem;letter-spacing:.3em;outline:none" autocomplete="current-password">
+<p id="authError" style="color:var(--shu);font-size:13px;text-align:center;margin-top:8px" class="hidden"></p>
+<button class="btn-primary" style="width:100%;margin-top:1.5rem" onclick="doLogin()">扉 を ひ ら く</button>
+<div style="margin-top:1.5rem;border-top:1px solid rgba(26,22,18,.1);padding-top:1rem;text-align:center">
+<p style="font-size:11px;color:rgba(26,22,18,.55)">認証コードは月毎に自動更新されます。</p>
+<p style="font-size:11px;color:rgba(26,22,18,.55)">マスターコードをお持ちの方は、そちらでもご利用いただけます。</p>
+<div style="margin-top:12px;border-left:3px solid var(--shu);padding:8px 12px;text-align:left;background:var(--washi-warm);font-size:11px;color:rgba(26,22,18,.7)">
+<strong style="color:var(--shu)">パスワードの条件</strong>　4文字以上 64文字以内、半角英数字とハイフン（-）のみ使用可能。重複は不可。
+</div>
+</div>
+</div>
+<p style="margin-top:2rem;font-size:11px;letter-spacing:.3em;color:rgba(26,22,18,.35)">── PRIVATE SERVICE ──</p>
+</div>
+</div>
+</div>
+
+<!-- ===== メイン画面 ===== -->
+<div id="mainScreen" class="hidden">
+<header style="border-bottom:1px solid rgba(26,22,18,.1);padding:12px 0">
+<div class="container" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+<div style="font-size:13px;letter-spacing:.3em"><span style="color:var(--shu)">12 SENSYUTSU</span> <strong>12占術</strong></div>
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font-size:11px;color:rgba(26,22,18,.55)">利用回数：∞</span>
+<button class="btn-outline" onclick="doLogout()">ログアウト</button>
+</div>
+</div>
+</header>
+<div class="container" style="padding-top:2rem;padding-bottom:1rem">
+<p style="font-size:12px;letter-spacing:.3em;color:var(--shu)">BIRTH → DESTINY → COMPATIBILITY</p>
+<h1 style="font-size:1.8rem;letter-spacing:.1em;margin:.5rem 0">相手との<span style="color:var(--shu)">相性</span>を占う</h1>
+</div>
+<div class="container">
+<div class="card">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">あなたのお名前</span>
+<input type="text" id="nameInput" placeholder="例：田中太郎" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">性別</span>
+<select id="genderInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none">
+<option value="">選択してください</option>
+<option value="male">男性</option>
+<option value="female">女性</option>
+<option value="other">その他</option>
+</select></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">生年月日</span>
+<input type="date" id="birthInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+
+<!-- 相手の情報 -->
+<hr class="shu" style="grid-column:1/-1">
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相手のお名前</span>
+<input type="text" id="partnerNameInput" placeholder="例：鈴木花子" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相手の性別</span>
+<select id="partnerGenderInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none">
+<option value="">選択してください</option>
+<option value="male">男性</option>
+<option value="female">女性</option>
+<option value="other">その他</option>
+</select></label>
+<label><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相手の生年月日</span>
+<input type="date" id="partnerBirthInput" style="width:100%;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px 0;outline:none"></label>
+
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">占う項目<span class="optional-label">必須</span></span>
+<div class="keyword-group" style="margin-top:8px">
+<button type="button" class="btn-toggle" onclick="toggleKeyword(this,'love')">💕 恋愛</button>
+<button type="button" class="btn-toggle" onclick="toggleKeyword(this,'marriage')">💍 結婚</button>
+<button type="button" class="btn-toggle" onclick="toggleKeyword(this,'career')">💼 仕事</button>
+<button type="button" class="btn-toggle" onclick="toggleKeyword(this,'money')">💰 金銭</button>
+<button type="button" class="btn-toggle" onclick="toggleKeyword(this,'health')">🩺 健康</button>
+<button type="button" class="btn-toggle" onclick="toggleKeyword(this,'relationship')">🤝 人間関係</button>
+</div>
+<input type="hidden" id="selectedKeyword" value="">
+</label>
+
+<label style="grid-column:1/-1"><span style="font-size:11px;letter-spacing:.2em;color:var(--shu)">相性を占う期間<span class="optional-label">必須</span></span>
+<div class="period-group">
+<label class="btn-radio" onclick="setPeriod(this,'day')">
+<input type="radio" name="period" value="day">
+<span>🔘 今日の相性</span>
+</label>
+<label class="btn-radio" onclick="setPeriod(this,'month')">
+<input type="radio" name="period" value="month">
+<span>🔘 今月の相性</span>
+</label>
+<label class="btn-radio" onclick="setPeriod(this,'year')">
+<input type="radio" name="period" value="year">
+<span>🔘 今年の相性</span>
+</label>
+</div>
+<input type="hidden" id="selectedPeriod" value="day">
+</label>
+</div>
+<div style="margin-top:1.5rem;text-align:center">
+<button class="btn-primary" onclick="doDiagnose()">✦ 占う</button>
+</div>
+<p style="text-align:right;font-size:11px;color:rgba(26,22,18,.55);margin-top:8px">使用回数に上限はありません（∞）</p>
+</div>
+</div>
+<!-- 結果エリア -->
+<div id="resultArea" class="container hidden" style="margin-top:2rem"></div>
+<!-- フッター -->
+<div class="footer">
+<div class="container">
+<p><strong>12占術</strong> ・ Private Service</p>
+<p>※ 本診断は独自に体系化した運命周期理論に基づくエンタテインメントです。最終的な意思決定はご自身と専門家の助言に基づいてください。</p>
+<p>※ 本サービスは私的・非公開のライセンス制サービスです。検索エンジンへの登録および第三者への共有はご遠慮ください。</p>
+</div>
+</div>
+</div>
+
+<!-- ===== 管理者モーダル ===== -->
+<div id="adminOverlay" class="overlay hidden" onclick="closeAdminModal()">
+<div class="modal" onclick="event.stopPropagation()">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+<span style="font-size:12px;letter-spacing:.3em;color:var(--shu)">ADMIN ACCESS</span>
+<button onclick="closeAdminModal()" style="background:none;font-size:1.2rem;color:var(--sumi)">✕</button>
+</div>
+<div id="adminGate">
+<div style="text-align:center;margin:2rem 0">
+<div style="font-size:2rem;margin-bottom:1rem">🔒</div>
+<p style="font-size:14px;letter-spacing:.2em;margin-bottom:.5rem">管理者パスワードを入力</p>
+<input type="password" id="adminPwInput" placeholder="••••" style="width:200px;border:none;border-bottom:1px solid rgba(26,22,18,.3);background:transparent;padding:8px;text-align:center;font-size:1.2rem;letter-spacing:.4em;outline:none">
+<br><button class="btn-primary" style="margin-top:1rem" onclick="doAdminAuth()">✦ 認証する</button>
+</div>
+</div>
+<div id="adminPanel" class="hidden"></div>
+</div>
+</div>
+
+<script>
+const CYCLE_ORDER=["静命","内観","再生","種火","発芽","上昇","開花","躍動","栄光","収穫","豊穣","継承"];
+const CYCLE_INFO={静命:{season:"天命",keyword:"原点"},内観:{season:"天命",keyword:"整理"},再生:{season:"天命",keyword:"更新"},種火:{season:"始動",keyword:"始動"},発芽:{season:"始動",keyword:"育成"},上昇:{season:"始動",keyword:"決定"},開花:{season:"飛翔",keyword:"発信"},躍動:{season:"飛翔",keyword:"拡大"},栄光:{season:"飛翔",keyword:"頂点"},収穫:{season:"黄金",keyword:"実利"},豊穣:{season:"黄金",keyword:"完成"},継承:{season:"黄金",keyword:"伝承"}};
+const CYCLE_COLORS={静命:"#3a3530",内観:"#5a5048",再生:"#7c6e8a",種火:"#7e9c5d",発芽:"#5d8a48",上昇:"#3f6d3a",開花:"#c9a24a",躍動:"#d97757",栄光:"#b23a2e",収穫:"#a8704a",豊穣:"#b88840",継承:"#8a5a3a"};
+const SEASON_EMOJI={天命:"❄",始動:"🌸",飛翔:"☀",黄金:"🍁"};
+const ZODIAC=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+const LIFESTAR_ZERO={水星:"子",氷晶星:"丑",木星:"寅",蒼海星:"卯",月星:"辰",潮汐星:"巳",火星:"午",深淵星:"未",金星:"申",純珠星:"酉",土星:"戌",天空星:"亥"};
+const CORE_TO_LIFESTAR={アクア:["水星","氷晶星"],フォレスト:["木星","蒼海星"],ルナ:["月星","潮汐星"],フレイム:["火星","深淵星"],シャイン:["金星","純珠星"],アース:["土星","天空星"]};
+const LIFESTAR_INFO={水星:{core:"アクア",element:"知性の流れ",feature:"知性的でクールな観察者。冷静な判断力と情報処理に優れる天才肌。"},氷晶星:{core:"アクア",element:"静謐の氷",feature:"繊細で内省的。芯の強さと深い洞察力を秘める。"},木星:{core:"フォレスト",element:"大地の根",feature:"誠実で努力家。着実に成果を積み上げる王道タイプ。"},蒼海星:{core:"フォレスト",element:"深淵の海",feature:"夢と直感に生きるロマンチスト。芸術性と感受性が豊か。"},月星:{core:"ルナ",element:"慈愛の月",feature:"面倒見のよい母性的リーダー。人と人を繋ぐ才能。"},潮汐星:{core:"ルナ",element:"潮流の魚",feature:"優しく繊細な平和主義者。共感力が高く癒しの分野で輝く。"},火星:{core:"フレイム",element:"情熱の火",feature:"情熱と行動力の塊。リスクを取って人生を切り開く先駆者。"},深淵星:{core:"フレイム",element:"深奥の闇",feature:"ミステリアスで一点集中型。徹底的に究める研究者気質。"},金星:{core:"シャイン",element:"光輝の金",feature:"華やかで社交的。美意識と豊かな感性で人を惹きつける。"},純珠星:{core:"シャイン",element:"純真の珠",feature:"純粋で愛らしい子ども心の持ち主。素直さと愛嬌で慕われる。"},土星:{core:"アース",element:"重厚の土",feature:"堅実で責任感の強いリーダー。粘り強く長期戦に強い大器晩成型。"},天空星:{core:"アース",element:"革新の天",feature:"独自の世界観を持つ自由人。型にはまらない発想で新しい風を吹き込む。"}};
+
+const HARDCODED_PASSWORDS=["1234","forever-premium-2026"];
+function verifyPassword(input){const t=input.trim();if(!t)return null;if(HARDCODED_PASSWORDS.includes(t))return"master";return null}
+function jdn(y,m,d){const a=Math.floor((14-m)/12);const y2=y+4800-a;const m2=m+12*a-3;return d+Math.floor((153*m2+2)/5)+365*y2+Math.floor(y2/4)-Math.floor(y2/100)+Math.floor(y2/400)-32045}
+function coreFromRemainder(r){if(r>=1&&r<=10)return"アクア";if(r>=11&&r<=20)return"アース";if(r>=21&&r<=30)return"シャイン";if(r>=31&&r<=40)return"フレイム";if(r>=41&&r<=50)return"ルナ";return"フォレスト"}
+function calcLifeStar(y,m,d){const j=jdn(y,m,d);const rem=j%60;const core=coreFromRemainder(rem);const pair=CORE_TO_LIFESTAR[core];const isOdd=y%2!==0;const star=isOdd?pair[1]:pair[0];return{lifeStar:star,core,polarity:isOdd?"陰（奇数年生まれ）":"陽（偶数年生まれ）",element:LIFESTAR_INFO[star].element,feature:LIFESTAR_INFO[star].feature,zeroZodiac:LIFESTAR_ZERO[star]}}
+function zodiacIdx(z){return ZODIAC.indexOf(z)}
+function cycleFromOffset(o){return CYCLE_ORDER[((o%12)+12)%12]}
+function dayZodiacIdx(y,m,d){return((jdn(y,m,d)+1)%12+12)%12}
+function calcDayCycle(star,y,m,d){return cycleFromOffset(dayZodiacIdx(y,m,d)-zodiacIdx(LIFESTAR_ZERO[star]))}
+function calcMonthCycle(star,month){return cycleFromOffset(((month%12)+12)%12-zodiacIdx(LIFESTAR_ZERO[star]))}
+function calcYearCycle(star,year){return cycleFromOffset((((year-4)%12+12)%12)-zodiacIdx(LIFESTAR_ZERO[star]))}
+
+const JIKKAN=["甲","乙","丙","丁","戊","己","庚","辛","壬","癸"];
+const JUNISHI_FULL=["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
+function jikkanInYo(kan){return JIKKAN.indexOf(kan)%2===0?"陽":"陰"}
+function yearKanCalc(year){return JIKKAN[((year-4)%10+10)%10]}
+function yearShiCalc(year){return JUNISHI_FULL[((year-4)%12+12)%12]}
+function dayPillarCalc(year,month,day){const a=Math.floor((14-month)/12);const y=year+4800-a;const m=month+12*a-3;const jd2=day+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;const gz=((jd2+49)%60+60)%60;return{kan:JIKKAN[gz%10],shi:JUNISHI_FULL[gz%12]}}
+function getMeishiki(year,month,day){const yK=yearKanCalc(year);const yS=yearShiCalc(year);const dp=dayPillarCalc(year,month,day);return{year:{kan:yK,shi:yS},day:{kan:dp.kan,shi:dp.shi}}}
+const GOGYO_ORDER=["木","火","土","金","水"];
+const ROKUGO_PAIRS=[["子","丑"],["寅","亥"],["卯","戌"],["辰","酉"],["巳","申"],["午","未"]];
+function isRokugo(s1,s2){return ROKUGO_PAIRS.some(p=>(p[0]===s1&&p[1]===s2)||(p[0]===s2&&p[1]===s1))}
+const SANGO_GROUPS=[["子","申","辰"],["丑","酉","巳"],["寅","午","戌"],["卯","未","亥"]];
+function isSangoHalf(s1,s2){return SANGO_GROUPS.some(g=>g.includes(s1)&&g.includes(s2))}
+const SOCHU_PAIRS=[["子","午"],["丑","未"],["寅","申"],["卯","酉"],["辰","戌"],["巳","亥"]];
+function isSochu(s1,s2){return SOCHU_PAIRS.some(p=>(p[0]===s1&&p[1]===s2)||(p[0]===s2&&p[1]===s1))}
+const SANKEI_PAIRS=[["寅","巳"],["巳","申"],["寅","申"],["丑","戌"],["戌","未"],["丑","未"],["子","卯"]];
+function isSankei(s1,s2){return SANKEI_PAIRS.some(p=>(p[0]===s1&&p[1]===s2)||(p[0]===s2&&p[1]===s1))}
+const KANGO_PAIRS=[["甲","己"],["乙","庚"],["丙","辛"],["丁","壬"],["戊","癸"]];
+
+function calcShichuCompat(y1,m1,d1,y2,m2,d2){const me1=getMeishiki(y1,m1,d1);const me2=getMeishiki(y2,m2,d2);let score=65;const dg1=me1.day.kan;const dg2=me2.day.kan;const ds1=me1.day.shi;const ds2=me2.day.shi;if(isRokugo(ds1,ds2))score+=15;else if(isSangoHalf(ds1,ds2))score+=10;else if(isSochu(ds1,ds2))score-=15;else if(isSankei(ds1,ds2))score-=10;const isKg=KANGO_PAIRS.some(p=>(p[0]===me1.day.kan&&p[1]===me2.day.kan)||(p[0]===me2.day.kan&&p[1]===me1.day.kan));if(isKg)score+=10;return Math.max(35,Math.min(98,score))}
+
+let messagesData={};
+async function loadMessagesData(){try{const response=await fetch('./data/12sensyutsu_messages.json');if(!response.ok)throw new Error(`HTTP error! status: ${response.status}`);messagesData=await response.json()}catch(error){console.error('messages.jsonの読み込みに失敗しました：',error);messagesData={}}}
+
+function doLogin(){const pw=document.getElementById('pwInput').value;const kind=verifyPassword(pw);if(!kind){document.getElementById('authError').textContent='認証コードが正しくありません。';document.getElementById('authError').classList.remove('hidden');return}document.getElementById('authError').classList.add('hidden');localStorage.setItem('AUTH_KEY',new Date().toISOString().slice(0,10));showMain()}
+function doLogout(){localStorage.removeItem('AUTH_KEY');showAuth()}
+function showAuth(){document.getElementById('authScreen').classList.remove('hidden');document.getElementById('mainScreen').classList.add('hidden')}
+function showMain(){document.getElementById('authScreen').classList.add('hidden');document.getElementById('mainScreen').classList.remove('hidden')}
+function checkAuth(){if(localStorage.getItem('AUTH_KEY'))showMain();else showAuth()}
+
+function openAdminModal(){document.getElementById('adminOverlay').classList.remove('hidden');document.getElementById('adminGate').classList.remove('hidden');document.getElementById('adminPanel').classList.add('hidden')}
+function closeAdminModal(){document.getElementById('adminOverlay').classList.add('hidden')}
+function doAdminAuth(){const pw=document.getElementById('adminPwInput').value;if(pw==='1234'){document.getElementById('adminGate').classList.add('hidden');document.getElementById('adminPanel').classList.remove('hidden')}else{alert('パスワードが違います')}}
+
+function setPeriod(btn,period){document.querySelectorAll('.period-group .btn-radio').forEach(b=>b.classList.remove('active'));btn.classList.add('active');btn.querySelector('input').checked=true;document.getElementById('selectedPeriod').value=period}
+function toggleKeyword(btn,keyword){document.querySelectorAll('[onclick*="toggleKeyword"]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('selectedKeyword').value=keyword}
+
+function doDiagnose(){const name=document.getElementById('nameInput').value.trim();const birth=document.getElementById('birthInput').value;const period=document.getElementById('selectedPeriod').value;const keyword=document.getElementById('selectedKeyword').value;const partnerName=document.getElementById('partnerNameInput').value.trim();const partnerGender=document.getElementById('partnerGenderInput').value;const partnerBirth=document.getElementById('partnerBirthInput').value;if(!birth){alert('生年月日を入力してください');return}if(!partnerBirth){alert('相手の生年月日を入力してください');return}if(!keyword){alert('占う項目を選択してください');return}const[by,bm,bd]=birth.split('-').map(Number);const[pby,pbm,pbd]=partnerBirth.split('-').map(Number);const td=new Date();let ty=td.getFullYear(),tm=td.getMonth()+1,tday=td.getDate();const star=calcLifeStar(by,bm,bd);const pstar=calcLifeStar(pby,pbm,pbd);let dayCyc,displayPeriod;if(period==='day'){dayCyc=calcDayCycle(star.lifeStar,ty,tm,tday);displayPeriod=`${ty}年${tm}月${tday}日`}else if(period==='month'){dayCyc=calcMonthCycle(star.lifeStar,tm);displayPeriod=`${ty}年${tm}月`}else{dayCyc=calcYearCycle(star.lifeStar,ty);displayPeriod=`${ty}年`}let pDayCyc;if(period==='day')pDayCyc=calcDayCycle(pstar.lifeStar,ty,tm,tday);else if(period==='month')pDayCyc=calcMonthCycle(pstar.lifeStar,tm);else pDayCyc=calcYearCycle(pstar.lifeStar,ty);const genderMap={male:'男性',female:'女性',other:'その他'};const displayName=partnerName||`お相手（${genderMap[partnerGender]||'不明'}）`;const baseCompatScore=calcShichuCompat(by,bm,bd,pby,pbm,pbd);const compatScore=80;const dayInfo=CYCLE_INFO[dayCyc];const keywordLabel={love:'💕 恋愛相性',marriage:'💍 結婚相性',career:'💼 仕事相性',money:'💰 金銭相性',health:'🩺 健康相性',relationship:'🤝 人間関係相性'};let html=`<div class="card" style="border-top:3px solid ${CYCLE_COLORS[dayCyc]};margin-bottom:1.5rem">`;html+=`<p style="font-size:11px;letter-spacing:.3em;color:var(--shu)">あなたの運命周期</p>`;html+=`<h2 style="font-size:1.6rem;letter-spacing:.1em;margin:.5rem 0">${star.lifeStar}・マスター</h2>`;html+=`<p style="font-size:12px;color:rgba(26,22,18,.7)">${star.core} ｜ ${star.polarity}</p>`;html+=`</div>`;html+=`<div class="card" style="margin-bottom:1.5rem;border-left:3px solid var(--gold);padding:1.5rem">`;html+=`<p style="font-size:12px;font-weight:bold;margin-bottom:1rem">【${keywordLabel[keyword]}】</p>`;html+=`<div style="text-align:center;font-size:1.4rem;color:var(--shu);font-weight:bold;margin:1rem 0">${displayName}さんとの相性</div>`;html+=`<div style="display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;margin:1rem 0">`;html+=`<div style="text-align:center;padding:1rem;border:1px solid rgba(201,162,74,.4);border-radius:8px;min-width:140px"><p style="font-size:11px;letter-spacing:.2em;color:rgba(26,22,18,.6);margin-bottom:.5rem">基本相性</p><div style="font-size:2rem;color:var(--shu);font-weight:bold">${baseCompatScore}点</div></div>`;html+=`<div style="text-align:center;padding:1rem;border:1px solid rgba(201,162,74,.4);border-radius:8px;min-width:140px"><p style="font-size:11px;letter-spacing:.2em;color:rgba(26,22,18,.6);margin-bottom:.5rem">${period==='day'?'今日':'今月'}の相性</p><div style="font-size:2rem;color:var(--shu);font-weight:bold">${compatScore}点</div></div>`;html+=`</div>`;html+=`<p style="font-size:11px;color:rgba(26,22,18,.7);margin-top:1rem;text-align:center">あなたの周期「${dayCyc}」と${displayName}の周期「${pDayCyc}」に基づいて計算されました。</p>`;html+=`</div>`;document.getElementById('resultArea').innerHTML=html;document.getElementById('resultArea').classList.remove('hidden');document.getElementById('resultArea').scrollIntoView({behavior:'smooth'})}
+
+document.addEventListener('DOMContentLoaded',()=>{document.getElementById('pwInput').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});loadMessagesData();checkAuth()});
+</script>
+</body>
+</html>
